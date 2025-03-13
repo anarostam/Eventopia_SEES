@@ -1,50 +1,25 @@
-import React, { use, useEffect, useState } from "react";
-import { restoreSession, getCurrentSession, supabase } from "./Client";
+import logo from './logo.svg';
+import './App.css';
 
-import{
-
-} from "./pages";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import ProtectedRoute from "./components/ProtectedRoute";
-import Layout from "./components/Layout";
-
-const App = () => {
-  const [token, setToken] = useState(false);
-
-  useEffect(() => {
-    const checksession = async () => {
-      const {
-        data: { session },
-        error,
-      } = await supabase.auth.getSession();
-
-      if (error) {
-        console.error("Session ERROR:", error.message);
-        setToken(false);
-      }else if(session) {
-        console.log("Session found:", session);
-        setToken(true);
-      } else {
-        console.log("No session found");
-        setToken(false);
-      }
-    };
-
-    checksession();
-  }, []);
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    setToken(false);
-      }; 
-
-  return (  
-    <Routes>
-      {/* <Route path = "/login" element={<Login setToken={setToken} />} /> */}
-      
-      {/*Public Routes */}
-
-    </Routes>
+function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.js</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+    </div>
   );
-};
+}
 
 export default App;
