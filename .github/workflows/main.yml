@@ -29,6 +29,7 @@ jobs:
         run: |
           cd Eventopia
           npm install
+          npm install @supabase/supabase-js
 
       - name: Run tests
         run: |
