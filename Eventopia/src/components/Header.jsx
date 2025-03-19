@@ -11,7 +11,7 @@ const Header = () => {
   return (
     <div className="header">
         <div>
-            <Link id="header-logo" to="/">LOGO</Link>
+            <Link id="header-logo" to="/">Eventopia</Link>
         </div>
 
         <div className="links--wrapper">

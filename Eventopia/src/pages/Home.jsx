@@ -15,13 +15,13 @@ const Home = () => {
             <div className="card-body">
               <h5 className="card-title"> Understanding the Importance of Eventopia </h5>
               <p className="card-text">
-                Eventopia is an innovative platform designed to simplify the planning, execution, and management of educational events. Whether it's a conference, seminar, workshop, or webinar, Eventopia streamlines every aspect of event coordination, ensuring a seamless experience for organizers, attendees, and speakers alike.              
+                Eventopia is an innovative platform designed to simplify the planning, execution, and management of educational events. Whether it's a conference, seminar, workshop, or webinar, Eventopia streamlines every aspect of event coordination, ensuring a seamless experience for organizers, attendees, and speakers alike.
                 <br></br>
                 <br></br>
-                
-                Our platform's user-friendly interface ensures accessibility and efficiency for all users, from event organizers to participants. Eventopia is here to redefine the future of educational events, helping create dynamic, well-organized, and impactful learning experiences.             
 
-                </p>
+                Our platform's user-friendly interface ensures accessibility and efficiency for all users, from event organizers to participants. Eventopia is here to redefine the future of educational events, helping create dynamic, well-organized, and impactful learning experiences.
+
+              </p>
               {/* <p className="card-text">
                 <small className="text-body-secondary">Last updated 3 mins ago</small>
               </p> */}
@@ -36,7 +36,7 @@ const Home = () => {
               <h5 className="card-title">How it works</h5>
               <p className="card-text">
                 With features like event scheduling, stakeholder management, interactive networking, event promotion, and real-time analytics, Eventopia fosters a collaborative learning environment that maximizes engagement and knowledge sharing. The system supports both in-person and virtual events, making it the go-to solution for modern educational event management.
-                 </p>
+              </p>
               {/* <p className="card-text">
                 <small className="text-body-secondary">Last updated 3 mins ago</small>
               </p> */}
@@ -47,6 +47,43 @@ const Home = () => {
           </div>
         </div>
       </div>
+
+      <div class="container">
+  <div class="row">
+   
+    <div class="col-md-4">
+      <div class="card">
+        <img src="..." class="card-img-top" alt="..."/>
+        <div class="card-body">
+          <h5 class="card-title">Card title</h5>
+          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        </div>
+      </div>
+    </div>
+
+   
+    <div class="col-md-4">
+      <div class="card">
+        <img src="..." class="card-img-top" alt="..."/>
+        <div class="card-body">
+          <h5 class="card-title">Card title</h5>
+          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        </div>
+      </div>
+    </div>
+
+  
+    <div class="col-md-4">
+      <div class="card">
+        <img src="..." class="card-img-top" alt="..."/>
+        <div class="card-body">
+          <h5 class="card-title">Card title</h5>
+          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 
     </div>
