@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { restoreSession, getCurrentSession, supabase} from "./Client";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import protectedRoute from "./components/protectedRoute";
-// import {
-
-// } from "./pages";
+import {
+Signup
+} from "./pages";
 const App = () => {
   const [token, setToken] = useState(false);
 
@@ -34,12 +34,14 @@ const App = () => {
     await supabase.auth.signOut();
     setToken(false);
   };
-  // return(
-  //   <Routes>
-  //     {/* <Route path = "/login" element={<Login  setToken = {setToken/>} /> */}
-  //     {/*Public Routes*/}
-  //   </Routes>
-  // );
+  return(
+    <Router>
+    <Routes>
+      <Route path = "/Signup" element={<Signup />} />
+      {/*Public Routes*/}
+    </Routes>
+    </Router>
+  );
   };
 
 
