@@ -1,45 +1,47 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+
 import { supabase } from "../Client";
 
-const Signup = () => {
-    let navigate = useNavigate();
 
-    const [formData, setFormData] = useState({
-        email: "",
-        name: "",
-        password: "",
-        role: "",
+   export function handleChange(event, setFormData) {
+        
+        const { name, value } = event.target;
+
+        setFormData((previousData) => {
+        const updatedData = { ...previousData, [name]: value };
+
+        
+        if (updatedData.password1 && updatedData.password2 && updatedData.password1 === updatedData.password2) {
+            updatedData.password = updatedData.password1; 
+        } else {
+            updatedData.password = ""; 
+        }
+
+        return updatedData;
     });
-
-    const roleMapping = {
-        admin: 1,
-        attendee: 2,
-        organizer: 3,
-        stakeholder: 4
     };
 
-    function handleChange(event) {
-        setFormData((previousData) => ({
-            ...previousData,
-            [event.target.name]: event.target.value
-        }));
-    }
-
-    async function handleSubmit(e) { 
-        e.preventDefault();
+    export async function handleSubmit(event, formData) {
+        
+    
+        event.preventDefault();
+        console.log("form:", formData);
+       
+        const roleMapping = {
+            admin: 1,
+            attendee: 2,
+            organizer: 3,
+            stakeholder: 4
+        };
         try{
             const roleNumber = roleMapping[formData.role] || 0;
 
-            const { data, error } = await supabase.auth.Signup({
+            const { error } = await supabase.auth.signUp({
                 email: formData.email,
                 password: formData.password,
-                options: {
-                    data: {
-                        name: formData.name,
-                        role: roleNumber,
-                    },
-                },  
+                // name: formData.name,
+                // role: roleNumber,
+                    
+                
             });
 
             if(error) throw error;
@@ -47,19 +49,23 @@ const Signup = () => {
             alert("Check your email for verification link");
             
         
-        const { data: insertData, error: insertError} = await supabase
+        const { insertError, data: insertedData} = await supabase
             .from("user")
             .insert({
                 name: formData.name,
                 email: formData.email,
                 password: formData.password,
-                role: formData.role,
+                role: roleNumber,
             });
 
-            if(insertError) throw insertError;
-            navigate("/login");
+            if(insertError){
+                console.log("error inserting", insertError.message);
+                alert("error inserting");
+                 throw insertError;}
+                 console.log("data submitted", insertedData);
+                //  alert("added successfully");
+
         } catch (error) {
             alert(error.message);
         }
-}}
-export default Signup;
+};
