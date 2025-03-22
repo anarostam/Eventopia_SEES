@@ -5,7 +5,12 @@ import Profile from './pages/Profile';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
+<<<<<<< HEAD
   function App(){
+
+import Footer from './components/Footer';
+import AddEvent from './pages/AddEvent';
+import EventConfirmation from './pages/EventConfirmation';
 
 
   return (
@@ -17,7 +22,10 @@ import Home from './pages/Home';
       <Route path="/register" element={<Register />} />
       <Route path="/" element={<Home />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/addEvent" element={<AddEvent />} />
+      <Route path="/eventConfirmation" element={<EventConfirmation />} />
     </Routes>
+    <Footer />
   </Router>
   );
   };
