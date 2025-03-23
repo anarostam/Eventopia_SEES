@@ -1,20 +1,18 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../Css-folder/AddVenue.css'; // Import your custom CSS for the page
+import '../Css-folder/AddVenue.css'; 
 
 const AddVenue = () => {
   const [venueName, setVenueName] = useState('');
   const [location, setLocation] = useState('');
   const [capacity, setCapacity] = useState('');
-  const [picture, setPicture] = useState(null); // For storing uploaded picture
+  const [picture, setPicture] = useState(null); 
 
-  const navigate = useNavigate(); // To navigate after submission
+  const navigate = useNavigate(); 
 
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Here you can handle the logic to send data to the backend or store it
 
     const newVenue = {
       venueName,
@@ -25,11 +23,10 @@ const AddVenue = () => {
 
     console.log('Venue Created:', newVenue);
     
-    // Optionally, redirect to another page after submitting the form
-    navigate('/venues'); // Redirect to the venues list or other page after submission
+   
+    navigate('/venues'); 
   };
 
-  // Handle picture upload
   const handlePictureChange = (e) => {
     const file = e.target.files[0];
     if (file) {
