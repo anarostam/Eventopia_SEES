@@ -16,7 +16,9 @@ const Profile = () => {
           <button className="btn btn-primary active" aria-current="page">Add a Event</button>
         </Link>
         <button className="btn btn-primary">View Event</button>
-        <button className="btn btn-primary">Manage Event</button>
+        <Link to="/AddVenue">
+        <button className="btn btn-primary"> Add a Venue</button>
+        </Link>
       </div>
 
       <br />
