@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import '../Css-folder/AddEvent.css'; 
+import '../Css-folder/AddEvent.css';
 
 const AddEvent = () => {
   const [eventName, setEventName] = useState('');
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
-  const [location, setLocation] = useState('');
+  const [venue, setVenue] = useState('');  // State for venue
   const [description, setDescription] = useState('');
+
+  const availableVenues = [
+    'Venue 1',
+    'Venue 2',
+    'Venue 3',
+    'Venue 4',
+    'Venue 5'
+  ];
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -16,7 +24,7 @@ const AddEvent = () => {
       eventName,
       date,
       time,
-      location,
+      venue,
       description,
     });
   };
@@ -56,15 +64,25 @@ const AddEvent = () => {
           />
         </div>
 
+        {/* Venue Selection with Radio Buttons */}
         <div className="form-field-wrapper">
-          <label>Location:</label>
-          <input
-            required
-            type="text"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            placeholder="Enter location..."
-          />
+          <label>Venue:</label>
+          <div className="radio-group">
+            <br />
+            {availableVenues.map((venueOption, index) => (
+              <div key={index} className="radio-option">
+                <input
+                  type="radio"
+                  id={venueOption}
+                  name="venue"
+                  value={venueOption}
+                  checked={venue === venueOption}
+                  onChange={(e) => setVenue(e.target.value)}  // Update venue on change
+                />
+                <label htmlFor={venueOption}>{venueOption}</label>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="form-field-wrapper">

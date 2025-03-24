@@ -1,6 +1,8 @@
 import React from 'react'
 import image1 from '../../src/images/4.png'
-
+import Eventimage1 from '../../src/images/event1.jpg'
+import Eventimage2 from '../../src/images/event2.webp'
+import Eventimage3 from '../../src/images/event3.png'
 const Home = () => {
   return (
     <div className="s-container">
@@ -53,7 +55,7 @@ const Home = () => {
    
     <div class="col-md-4">
       <div class="card">
-        <img src="..." class="card-img-top" alt="..."/>
+        <img src={Eventimage1} class="card-img-top" alt="..."/>
         <div class="card-body">
           <h5 class="card-title">Card title</h5>
           <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
@@ -64,7 +66,7 @@ const Home = () => {
    
     <div class="col-md-4">
       <div class="card">
-        <img src="..." class="card-img-top" alt="..."/>
+        <img src={Eventimage2} class="card-img-top" alt="..."/>
         <div class="card-body">
           <h5 class="card-title">Card title</h5>
           <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
@@ -75,7 +77,7 @@ const Home = () => {
   
     <div class="col-md-4">
       <div class="card">
-        <img src="..." class="card-img-top" alt="..."/>
+        <img src={Eventimage3} class="card-img-top" alt="..."/>
         <div class="card-body">
           <h5 class="card-title">Card title</h5>
           <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>

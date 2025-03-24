@@ -11,6 +11,7 @@ import Home from './pages/Home';
 import Footer from './components/Footer';
 import AddEvent from './pages/AddEvent';
 import EventConfirmation from './pages/EventConfirmation';
+import AddVenue from './pages/AddVenue';
 
 
   return (
@@ -24,6 +25,7 @@ import EventConfirmation from './pages/EventConfirmation';
       <Route path="/profile" element={<Profile />} />
       <Route path="/addEvent" element={<AddEvent />} />
       <Route path="/eventConfirmation" element={<EventConfirmation />} />
+      <Route path="/addVenue" element={<AddVenue />} />
     </Routes>
     <Footer />
   </Router>
