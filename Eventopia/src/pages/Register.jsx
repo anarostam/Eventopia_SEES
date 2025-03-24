@@ -1,17 +1,31 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { Link } from 'react-router-dom'
 import '../Css-folder/index.css'
+import './Signup'
+import {handleSubmit} from './Signup'
+import {handleChange} from './Signup'
 
 const Register = () => {
+  const [formData, setFormData] = useState({
+    email: "",
+    name: "",
+    password: "",
+    role: "",
+  });
+  
   return (
     <div className="s-container">
       <div className="login-register-container">
-        <form>
+        <form
+        
+        onSubmit={(e) => handleSubmit(e, formData)}
+        >
 
           <div className="form-field-wrapper">
                 <label>Name:</label>
                 <input 
                   required
+                  onChange={(e) => handleChange(e, setFormData)}
                   type="text" 
                   name="name"
                   placeholder="Enter name..."
@@ -22,6 +36,7 @@ const Register = () => {
                 <label>Email:</label>
                 <input 
                   required
+                  onChange={(e) => handleChange(e, setFormData)}
                   type="email" 
                   name="email"
                   placeholder="Enter email..."
@@ -31,6 +46,7 @@ const Register = () => {
             <div className="form-field-wrapper">
                 <label>Password:</label>
                 <input 
+                onChange={(e) => handleChange(e, setFormData)}
                   type="password"
                   name="password1" 
                   placeholder="Enter password..."
@@ -40,6 +56,7 @@ const Register = () => {
             <div className="form-field-wrapper">
                 <label>Confirm Password:</label>
                 <input 
+                onChange={(e) => handleChange(e, setFormData)}
                   type="password"
                   name="password2" 
                   placeholder="Confirm password..."
@@ -48,7 +65,7 @@ const Register = () => {
 
             <div className="form-field-wrapper">
             <label>Role:</label>
-            <select name="role" required>
+            <select name="role" required onChange={(e) => handleChange(e, setFormData)}>
               <option value="">Select Role</option>
               <option value="stakeholder">Stakeholder</option>
               <option value="attendee">Attendee</option>

@@ -11,9 +11,10 @@ import EventConfirmation from './pages/EventConfirmation';
 import AddVenue from './pages/AddVenue';
 import VenueConfirmation from './pages/VenueConfirmation';
 import ViewEvent from './pages/ViewEvent';
+  
 
+function App(){
 
-function App() {
   return (
     
     <Router>
@@ -32,6 +33,7 @@ function App() {
     <Footer />
   </Router>
   );
-}
+  };
+
 
 export default App;
