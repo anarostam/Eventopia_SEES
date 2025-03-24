@@ -9,6 +9,7 @@ import Footer from './components/Footer';
 import AddEvent from './pages/AddEvent';
 import EventConfirmation from './pages/EventConfirmation';
 import AddVenue from './pages/AddVenue';
+import VenueConfirmation from './pages/VenueConfirmation';
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
       <Route path="/addEvent" element={<AddEvent />} />
       <Route path="/eventConfirmation" element={<EventConfirmation />} />
       <Route path="/addVenue" element={<AddVenue />} />
+      <Route path ="/venueConfirmation" element={<VenueConfirmation />} />
     </Routes>
     <Footer />
   </Router>

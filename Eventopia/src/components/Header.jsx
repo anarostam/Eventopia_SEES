@@ -19,7 +19,7 @@ const Header = () => {
                 <Link to="/" className="header--link">Home</Link>
                 <Link to="/profile" className="header--link">Profile</Link>
 
-                <button onClick={logoutClick} className="btn">Logout</button>
+                <button onClick={logoutClick} className="btn">Log In</button>
             </>
             {/* <>
 

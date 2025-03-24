@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../Css-folder/AddVenue.css'; 
 
 const AddVenue = () => {
@@ -82,7 +82,9 @@ const AddVenue = () => {
         </div>
 
         <div className="form-field-wrapper">
+          <Link to="/VenueConfirmation">
           <button type="submit">Create Venue</button>
+          </Link>
         </div>
       </form>
     </div>
