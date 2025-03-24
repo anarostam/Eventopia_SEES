@@ -5,17 +5,15 @@ import Profile from './pages/Profile';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
-<<<<<<< HEAD
 import Footer from './components/Footer';
 import AddEvent from './pages/AddEvent';
 import EventConfirmation from './pages/EventConfirmation';
 import AddVenue from './pages/AddVenue';
 import VenueConfirmation from './pages/VenueConfirmation';
 import ViewEvent from './pages/ViewEvent';
-=======
-  function App(){
->>>>>>> 33265211bc83dbf365380cba3a467ca70814bbd4
+  
 
+function App(){
 
   return (
     
