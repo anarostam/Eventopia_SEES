@@ -4,7 +4,10 @@ import { supabase } from "../Client";
 const Profile = () => {
     const [userEmail, setUserEmail] = useState("");
     const [imgurl, setimgurl] = useState("");
-useEffect(() => {
+    const [newimgurl, setnewimgurl] = useState(null);
+    const [uploading, setuploading] = useState(false);
+    
+    useEffect(() => {
     const fetchData = async () => {
         try {
             const { data: userResponse, error: userError } = await supabase.auth.getUser();
