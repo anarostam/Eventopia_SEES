@@ -8,6 +8,8 @@ const AddEvent = () => {
   const [time, setTime] = useState('');
   const [venue, setVenue] = useState('');  // State for venue
   const [description, setDescription] = useState('');
+  const [picture, setPicture] = useState(null);
+
 
   const availableVenues = [
     'Venue 1',
@@ -26,9 +28,16 @@ const AddEvent = () => {
       time,
       venue,
       description,
+      picture: picture ? picture.name : '',
     });
   };
 
+  const handlePictureChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setPicture(file);
+    }
+  };
   return (
     <div className="add-event-container">
       <h1>Add Event</h1>
@@ -93,6 +102,16 @@ const AddEvent = () => {
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Enter event description..."
           />
+        </div>
+
+        <div className="form-field-wrapper">
+          <label>Event Picture:</label>
+          <input
+            type="file"
+            onChange={handlePictureChange}
+            required
+          />
+          {picture && <p>Selected Picture: {picture.name}</p>}
         </div>
 
         <div className="form-field-wrapper">

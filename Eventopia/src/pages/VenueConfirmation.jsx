@@ -2,12 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import '../Css-folder/EventConfirmation.css';
 
-
-const EventConfirmation = () => {
+const VenueConfirmation = () => {
   return (
     <div className="confirmation-container">
-      <h1>Event Added Successfully!</h1>
-      <p>Your event has been successfully added to the system.</p>
+      <h1>Venue Added Successfully!</h1>
+      <p>Your venue has been successfully added to the system.</p>
       
       <div className="btn-group">
         <Link to="/profile">
@@ -21,4 +20,4 @@ const EventConfirmation = () => {
   );
 };
 
-export default EventConfirmation;
+export default VenueConfirmation;
