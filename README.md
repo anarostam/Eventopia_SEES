@@ -38,9 +38,7 @@ Eventopia-SEES aims to:
 ## ⚙️ Technologies
 
 - **Frontend:** HTML/CSS, JavaScript, React.js
-- **Backend/Database:**  Supabase, Node.jsb
-- **Tools for Design & Collaboration:** Figma, Lucidchart, GitHub, Trello
-
+- **Backend/Database:**  Supabase, Node.js
 ---
 
 ## 🛠️ Installation Procedure
@@ -55,7 +53,7 @@ Before you begin, ensure you have the following installed:
 
 ### Step 1: Clone the Repository
 ```bash
-[git clone https://github.com/anarostam/Eventopia_SEES.git)
+git clone https://github.com/anarostam/Eventopia_SEES.git)
 ```  
 
 **Step 2: Navigate to the Project Directory**  
