@@ -50,12 +50,12 @@ Eventopia-SEES aims to:
 ### Prerequisites:
 Before you begin, ensure you have the following installed:
 
-Node.js: Download and install Node.js from https://nodejs.org/en/download.
-Git:Download and install Git from Git's official site, if not already installed.
+- **Node.js:** Download and install Node.js from https://nodejs.org/en/download.
+- **Git:** Download and install Git from Git's official site, if not already installed.
 
 ### Step 1: Clone the Repository
 ```bash
-[git clone https://github.com/<your-org>/SEES_Project_W25.git](https://github.com/anarostam/Eventopia_SEES.git)
+[git clone https://github.com/anarostam/Eventopia_SEES.git)
 ```  
 
 **Step 2: Navigate to the Project Directory**  
