@@ -108,4 +108,3 @@ This command will start the React development server and open the Eventopia (Sma
 |Youssef Yacoub      |   40189020          |
 |Laurie Anne Laberge |   40173077          |
 
-## Setup
