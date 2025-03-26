@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '../Css-folder/AddVenue.css'; 
+import { Venue } from "./Venueback";
 
 const AddVenue = () => {
   const [venueName, setVenueName] = useState('');
@@ -8,24 +10,28 @@ const AddVenue = () => {
   const [capacity, setCapacity] = useState('');
   const [picture, setPicture] = useState(null); 
 
-  const navigate = useNavigate(); 
-
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-
-    const newVenue = {
+    const result = await Venue({
       venueName,
       location,
       capacity,
-      picture: picture ? picture.name : '',
-    };
+      picture,
+    });
 
-    console.log('Venue Created:', newVenue);
-    
-   
-    navigate('/venues'); 
+    if(result.success){
+      alert("Event added successfully!");
+      navigate('/VenueConfirmation');
+
+    }else{
+      alert(`Failed to add venue: ${result.message}`);
+    }
+
+    // navigate('/venues'); 
   };
+
 
   const handlePictureChange = (e) => {
     const file = e.target.files[0];
@@ -33,11 +39,14 @@ const AddVenue = () => {
       setPicture(file);
     }
   };
+ 
 
   return (
     <div className="add-venue-container">
       <h1>Add a Venue</h1>
-      <form onSubmit={handleSubmit}>
+      <form 
+      onSubmit={handleSubmit}
+      >
         <div className="form-field-wrapper">
           <label>Venue Name:</label>
           <input
@@ -80,11 +89,11 @@ const AddVenue = () => {
           />
           {picture && <p>Selected Picture: {picture.name}</p>}
         </div>
-
+        
         <div className="form-field-wrapper">
-          <Link to="/VenueConfirmation">
+          
           <button type="submit">Create Venue</button>
-          </Link>
+        
         </div>
       </form>
     </div>

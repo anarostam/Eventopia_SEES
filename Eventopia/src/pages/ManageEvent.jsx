@@ -3,19 +3,17 @@ import { createClient } from '@supabase/supabase-js';
 import { useNavigate } from 'react-router-dom';
 import '../Css-folder/ViewEvent.css';
 
-// Initialize Supabase client
 const supabase = createClient(
   'https://fkbflmyfughlgxnzuazy.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZrYmZsbXlmdWdobGd4bnp1YXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkyOTk0MTQsImV4cCI6MjA1NDg3NTQxNH0.GQCJ-XBiyZAD2tVXVwY_RWFaF6dHejPGKW5jy6p0deA'
 );
 
-const ViewEvent = () => {
+const ManageEvent = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // Fetch event data from the database
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -26,7 +24,7 @@ const ViewEvent = () => {
 
         if (error) throw error;
 
-        setEvents(data); // Set the fetched data to state
+        setEvents(data); 
       } catch (error) {
         setError('Failed to fetch events. Please try again later.');
         console.error(error);
@@ -38,16 +36,24 @@ const ViewEvent = () => {
     fetchEvents();
   }, []);
 
-  // Register event handler
-  const handleRegister = (event) => {
-    const userId = localStorage.getItem('userId') || '1'; // Default for testing
-    navigate('/payment', {
-      state: {
-        eventId: event.id,
-        attendeeId: parseInt(userId),
-        ticketPrice: event.price
-      }
-    });
+  
+  const handleEdit = (event) => {
+    navigate('/EditEvent', { state: { event } });
+  };
+
+  
+  const handleDelete = async (eventId) => {
+    const { error } = await supabase
+      .from('event')
+      .delete()
+      .eq('id', eventId);
+
+    if (error) {
+      setError('Failed to delete the event. Please try again later.');
+    } else {
+      
+      setEvents(events.filter((event) => event.id !== eventId));
+    }
   };
 
   if (error) {
@@ -62,7 +68,7 @@ const ViewEvent = () => {
 
   return (
     <div className="container mt-5">
-      <h1 className="text-center mb-4">Upcoming Events</h1>
+      <h1 className="text-center mb-4">Manage Events</h1>
 
       <div className="row">
         {loading ? (
@@ -99,9 +105,15 @@ const ViewEvent = () => {
                       <span className="h5 mb-0">${event.price}</span>
                       <button
                         className="btn btn-primary"
-                        onClick={() => handleRegister(event)}
+                        onClick={() => handleEdit(event)}
                       >
-                        Register Now
+                        Edit Event
+                      </button>
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => handleDelete(event.id)}
+                      >
+                        Delete Event
                       </button>
                     </div>
                   </div>
@@ -115,4 +127,4 @@ const ViewEvent = () => {
   );
 };
 
-export default ViewEvent;
+export default ManageEvent;

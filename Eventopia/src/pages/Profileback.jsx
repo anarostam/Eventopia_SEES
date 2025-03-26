@@ -1,60 +1,81 @@
-import { useState, useEffect } from 'react';
 import { supabase } from "../Client";
 
-const Profile = () => {
-    const [userEmail, setUserEmail] = useState("");
-    const [imgurl, setimgurl] = useState("");
-    const [newimgurl, setnewimgurl] = useState(null);
-    const [uploading, setuploading] = useState(false);
-    
-    useEffect(() => {
-    const fetchData = async () => {
-        try {
-            const { data: userResponse, error: userError } = await supabase.auth.getUser();
-            if(userError || !userResponse?.user) {
-                console.error("Error fetching user:", userError || "User not found.");
-                throw new Error(userError || "User not found.");
-            }
+// Uploads a profile picture and updates the user's profilepic column
+export const uploadProfilePicture = async (file) => {
+  try {
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
 
-            const user = userResponse.user;
-            setUserEmail(user.email);
+    if (userError || !user) throw userError || new Error("User not found");
 
-            const { data: userData, error: userFetchError } = await supabase
-            .from("user")
-            .select("id, profilepic")
-            .eq("email", user.email)
-            .single();
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${user.id}.${fileExt}`;
+    const filePath = `${fileName}`;
 
-            if (userFetchError || !userData) {
-                console.error("Error fetching user data:", userFetchError || "No user data found.");
-                throw new Error(userFetchError || "No user data found.");
-            }
+    const { error: uploadError } = await supabase.storage
+      .from("profilepictures")
+      .upload(filePath, file, { upsert: true });
 
-            const userId = userData.id;
+    if (uploadError) throw uploadError;
 
-            if(userData.profilepic) {
-                try {
-                    const { data: profilePicData, error: downloadError } = await supabase.storage
-                    .from("profilepictures")
-                    .download(userData.profilepic);
-                    if (downloadError || !profilePicData) {
-                        console.error("Error downloading profile picture:", downloadError || "No profile picture found.");
-                        throw new Error(downloadError || "No profile picture found.");
-                    }
+    const { data: publicUrlData, error: urlError } = await supabase.storage
+      .from("profilepictures")
+      .getPublicUrl(filePath);
 
-                    const url = URL.createObjectURL(profilePicData);
-                    setimgurl(url);
-                }catch (error) {
-                    console.log("Error processing profile picture:", error);
-                }
-            }
-        }catch (error) {
-            console.log("something went wrong", error.message);
-        }
+    if (urlError) throw urlError;
+
+    const { error: updateError } = await supabase
+      .from("user")
+      .update({ profilepic: filePath })
+      .eq("id", user.id);
+
+    if (updateError) throw updateError;
+
+    return { success: true, publicUrl: publicUrlData.publicUrl };
+  } catch (error) {
+    console.error("Upload error:", error.message);
+    return { success: false, message: error.message };
+  }
+};
+
+// Fetches user email and profile picture URL
+export const fetchUserProfile = async () => {
+  try {
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user) throw authError || new Error("User not found");
+
+    const { data: userData, error: userFetchError } = await supabase
+      .from("user")
+      .select("id, email, profilepic")
+      .eq("id", user.id)
+      .single();
+
+    if (userFetchError || !userData) throw userFetchError || new Error("No user data found");
+
+    let publicUrl = null;
+
+    if (userData.profilepic) {
+      const { data } = supabase.storage
+        .from("profilepictures")
+        .getPublicUrl(userData.profilepic);
+      publicUrl = data.publicUrl;
+    }
+
+    return {
+      success: true,
+      data: {
+        email: userData.email,
+        profilepic: publicUrl,
+      },
     };
-
-    fetchData();
-}, []);
-}
-
-export default Profile;
+  } catch (error) {
+    console.error("Fetch profile error:", error.message);
+    return { success: false, message: error.message };
+  }
+};
