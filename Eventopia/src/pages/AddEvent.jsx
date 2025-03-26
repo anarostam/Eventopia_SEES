@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '../Css-folder/AddEvent.css';
+import { AddEventBack} from "./AddEventBack";
 
 const AddEvent = () => {
   const [eventName, setEventName] = useState('');
@@ -10,7 +12,7 @@ const AddEvent = () => {
   const [description, setDescription] = useState('');
   const [picture, setPicture] = useState(null);
 
-
+  const navigate = useNavigate(); 
   const availableVenues = [
     'Venue 1',
     'Venue 2',
@@ -19,19 +21,40 @@ const AddEvent = () => {
     'Venue 5'
   ];
 
-  const handleSubmit = (e) => {
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   // Backend Logic
+  //   console.log({
+  //     eventName,
+  //     date,
+  //     time,
+  //     venue,
+  //     description,
+  //     picture: picture ? picture.name : '',
+  //   });
+  // };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Backend Logic
-    console.log({
+  
+    const result = await AddEventBack({
       eventName,
       date,
       time,
       venue,
       description,
-      picture: picture ? picture.name : '',
+      picture,
     });
+  
+    if (result.success) {
+      alert("Event added successfully!");
+      navigate("/EventConfirmation");
+      // redirect if needed or clear form
+    } else {
+      alert(`Failed to add event: ${result.message}`);
+    }
   };
-
+  
   const handlePictureChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -115,9 +138,12 @@ const AddEvent = () => {
         </div>
 
         <div className="form-field-wrapper">
-          <Link to="/EventConfirmation">
+          {/* <Link to="/EventConfirmation">
             <button type="submit">Add Event</button>
-          </Link>
+          </Link> */}
+
+<button type="submit">Add Event</button>
+
         </div>
       </form>
     </div>
