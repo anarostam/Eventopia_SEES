@@ -30,6 +30,9 @@ const Profile = () => {
           <button className="btn btn-primary">Add a Venue</button>
         </Link>
       </div>
+      <br />
+      <br />
+      <br />
     </div>
   );
 };

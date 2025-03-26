@@ -23,7 +23,13 @@ const ViewEvent = () => {
       {/* display 3 events per row */}
       <div className="row">
         {events.length === 0 ? (
-          <div className="col-12 text-center">Loading events...</div>
+          <div className="col-12 text-center">Loading events...
+          <br />
+          <br />
+          <br/>
+          <br />
+          <br />
+          </div>
         ) : (
           events.map((event, index) => (
             <div key={event.id} className="col-md-4 mb-4">
