@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import './Css-folder/App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -13,7 +12,8 @@ import EventConfirmation from './pages/EventConfirmation';
 import AddVenue from './pages/AddVenue';
 import VenueConfirmation from './pages/VenueConfirmation';
 import ViewEvent from './pages/ViewEvent';
-
+import Payment from './pages/Payment';
+import PaymentConfirmation from './components/payment/PaymentConfirmation';
 function App() {
   const [user, setUser] = useState(null);
 
@@ -37,6 +37,8 @@ function App() {
         <Route path="/addVenue" element={<AddVenue />} />
         <Route path="/venueConfirmation" element={<VenueConfirmation />} />
         <Route path="/ViewEvent" element={<ViewEvent />} />
+        <Route path="/payment" element={<Payment />} />
+        <Route path="/payment-confirmation" element={<PaymentConfirmation />} />
       </Routes>
       <Footer />
     </Router>
