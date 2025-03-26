@@ -83,6 +83,9 @@ const Profile = () => {
             <Link to="/ViewVenue">
               <button className="btn btn-secondary">View Venues</button>
             </Link>
+            <Link to="/ManageEvent">
+              <button className="btn btn-secondary">Manage Event</button>
+            </Link>
           </>
         )}
 

@@ -15,6 +15,8 @@ import ViewEvent from './pages/ViewEvent';
 import Payment from './pages/Payment';
 import PaymentConfirmation from './components/payment/PaymentConfirmation';
 import ViewVenue from './pages/ViewVenue';
+import ManageEvent from './pages/ManageEvent';
+import EditEvent from './pages/EditEvent';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -42,6 +44,8 @@ function App() {
         <Route path="/payment" element={<Payment />} />
         <Route path="/payment-confirmation" element={<PaymentConfirmation />} />
         <Route path="/viewVenue" element={<ViewVenue />} />
+        <Route path="/manageEvent" element={<ManageEvent />} />
+        <Route path="/editEvent" element={<EditEvent />} />
       </Routes>
       <Footer />
     </Router>
