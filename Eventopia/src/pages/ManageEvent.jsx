@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { useNavigate } from 'react-router-dom';
 import '../Css-folder/ViewEvent.css';
-
+import { deleteEvent } from './AddEventBack';
 const supabase = createClient(
   'https://fkbflmyfughlgxnzuazy.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZrYmZsbXlmdWdobGd4bnp1YXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkyOTk0MTQsImV4cCI6MjA1NDg3NTQxNH0.GQCJ-XBiyZAD2tVXVwY_RWFaF6dHejPGKW5jy6p0deA'
@@ -111,7 +111,7 @@ const ManageEvent = () => {
                       </button>
                       <button
                         className="btn btn-danger"
-                        onClick={() => handleDelete(event.id)}
+                        onClick={() => deleteEvent(event.id)}
                       >
                         Delete Event
                       </button>

@@ -64,22 +64,34 @@ if (insertError) {
   }
 };
 export const deleteEvent = async (id) => {
-    try {
-      const { error: deleteError } = await supabase
-        .from('event')
-        .delete()
-        .eq('id', id);
-  
-      if (deleteError) {
-        console.error('Delete failed:', deleteError.message);
-        return { success: false, message: deleteError.message || 'Unknown error' };
-      }
-  
-      return { success: true };
-    } catch (error) {
-      console.error('Unexpected error:', error.message);
-      return { success: false, message: 'Unexpected error occurred' };
+  try {
+    // Delete related payments first
+    const { error: paymentError } = await supabase
+      .from('payments')
+      .delete()
+      .eq('eventID', id);
+
+    if (paymentError) {
+      console.error('Failed to delete related payments:', paymentError.message);
+      return { success: false, message: 'Failed to delete related payments' };
     }
+
+    // Now delete the event
+    const { error: deleteError } = await supabase
+      .from('event')
+      .delete()
+      .eq('id', id);
+
+    if (deleteError) {
+      console.error('Delete failed:', deleteError.message);
+      return { success: false, message: deleteError.message || 'Unknown error' };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    return { success: false, message: 'Unexpected error occurred' };
+  }
   };
   export const updateEvent = async ({id, name, date, venue, description, picture_url, time}) => {
   try{
@@ -88,10 +100,10 @@ export const deleteEvent = async (id) => {
       if (picture_url) {
           const fileExt = picture_url.name.split('.').pop();
           const fileName = `${Date.now()}.${fileExt}`;
-          const filePath = `venuepictures/${fileName}`;
+          const filePath = `event-pictures/${fileName}`;
     
           const { error: uploadError } = await supabase.storage
-            .from('venuepictures')
+            .from('event-pictures')
             .upload(filePath, picture_url);
     
           if (uploadError) {
