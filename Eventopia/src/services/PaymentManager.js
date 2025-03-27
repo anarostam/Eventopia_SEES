@@ -1,3 +1,5 @@
+import { supabase } from "../Client"; 
+
 class PaymentManager {
   constructor() {
     if (PaymentManager.instance) {
@@ -41,6 +43,30 @@ class PaymentManager {
     return PaymentManager.instance;
   }
 
+
+  // log payment to supabase
+  async logPayment(eventId, attendeeId, amount, status) {
+    try {
+      const { data, error } = await supabase
+        .from('payments')
+        .insert([
+          {
+            eventID: eventId,
+            attendeeID: attendeeId,
+            amount: amount,
+            status: status
+          }
+        ]);
+      console.log("Supabase insert response: ", data, error);
+      if (error) {
+        console.error("Error logging payment to supabase: ", error);
+      }
+      return { data, error };
+    } catch (error) {
+      console.error("Unexpected error logging payment: ", error);
+    }
+  }
+
   // Process a new payment
   async processPayment(paymentData) {
     const transactionId = `${paymentData.eventId}-${paymentData.attendeeId}-${Date.now()}`;
@@ -60,7 +86,6 @@ class PaymentManager {
       // Update payment status
       paymentData.status = this.PAYMENT_STATUSES.PROCESSING;
 
-      // TODO: Backend integration will handle actual payment processing
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Update payment status on success
@@ -69,9 +94,13 @@ class PaymentManager {
       // Generate ticket after successful payment
       const ticketId = await this.generateTicket(paymentData, registrationId);
       
+            
+      // log payment
+      await this.logPayment(paymentData.eventId, paymentData.attendeeId, paymentData.amount, true);
+
       // Update registration status
       await this.updateRegistrationStatus(registrationId, this.REGISTRATION_STATUSES.CONFIRMED);
-      
+
       return {
         paymentId: transactionId,
         registrationId,
@@ -130,7 +159,6 @@ class PaymentManager {
     try {
       this.activeTransactions.add(paymentId);
       
-      // TODO: Backend integration will handle actual refund processing
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Update associated registration and ticket

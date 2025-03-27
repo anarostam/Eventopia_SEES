@@ -33,8 +33,18 @@ const EditEvent = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    const result = await updateEvent(formData);
-    
+
+    // Convert price to float if not empty
+    if (formData.price && isNaN(parseFloat(formData.price))) {
+      alert("Please enter a valid price.");
+      return;
+    }
+
+    const result = await updateEvent({
+      ...formData,
+      price: parseFloat(formData.price) || 0, // Default to 0 if empty or invalid
+    });
+
     if (!result.success) {
       alert(result.message);
     } else {
@@ -75,6 +85,21 @@ const EditEvent = () => {
           <label>Venue</label>
           <input type="text" className="form-control" name="venue" value={formData.venue} onChange={handleChange} required />
         </div>
+        
+        {/* ✅ Price Field */}
+        <div className="form-field-wrapper">
+          <label>Price (enter 0 for Free):</label>
+          <input
+            type="number"
+            className="form-control"
+            name="price"
+            min="0"
+            value={formData.price || 0}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
         <div className="form-field-wrapper">
           <label>Event Picture</label>
           <input type="file" className="form-control" name="picture_url" onChange={handleChange} accept="image/*" />
