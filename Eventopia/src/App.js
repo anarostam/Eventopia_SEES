@@ -15,12 +15,8 @@ import ViewEvent from './pages/ViewEvent';
 import Payment from './pages/Payment';
 import PaymentConfirmation from './components/payment/PaymentConfirmation';
 import ViewVenue from './pages/ViewVenue';
-<<<<<<< Updated upstream
 import ManageEvent from './pages/ManageEvent';
 import EditEvent from './pages/EditEvent';
-
-=======
->>>>>>> Stashed changes
 
 function App() {
   const [user, setUser] = useState(null);
@@ -48,11 +44,8 @@ function App() {
         <Route path="/payment" element={<Payment />} />
         <Route path="/payment-confirmation" element={<PaymentConfirmation />} />
         <Route path="/viewVenue" element={<ViewVenue />} />
-<<<<<<< Updated upstream
         <Route path="/manageEvent" element={<ManageEvent />} />
         <Route path="/editEvent" element={<EditEvent />} />
-=======
->>>>>>> Stashed changes
       </Routes>
       <Footer />
     </Router>

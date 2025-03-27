@@ -1,7 +1,3 @@
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 import React, { useState, useEffect } from 'react';
 //import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -19,52 +15,6 @@ const AddEvent = () => {
   const [picture, setPicture] = useState(null);
   const [availableVenues, setAvailableVenues] = useState([]);
   const [loadingVenues, setLoadingVenues] = useState(true);
-<<<<<<< Updated upstream
-
-  // const navigate = useNavigate(); 
-  // const availableVenues = [
-  //   'Venue 1',
-  //   'Venue 2',
-  //   'Venue 3',
-  //   'Venue 4',
-  //   'Venue 5'
-  // ];
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   // Backend Logic
-  //   console.log({
-  //     eventName,
-  //     date,
-  //     time,
-  //     venue,
-  //     description,
-  //     picture: picture ? picture.name : '',
-  //   });
-  // };
-
-  // const availableVenues = [
-  //   'Venue 1',
-  //   'Venue 2',
-  //   'Venue 3',
-  //   'Venue 4',
-  //   'Venue 5'
-  // ];
-  useEffect(() => {
-    const fetchVenues = async () => {
-      const { data, error } = await supabase.from('venues').select('id, venue_name, location, capacity, venuepicture');
-      if (error) {
-        console.error('Error fetching venues:', error.message);
-      } else {
-        setAvailableVenues(data);
-      }
-      setLoadingVenues(false);
-    };
-
-    fetchVenues();
-  }, []);
-=======
->>>>>>> Stashed changes
 
   const navigate = useNavigate(); 
   // const availableVenues = [
@@ -85,34 +35,9 @@ const AddEvent = () => {
       setLoadingVenues(false);
     };
 
-<<<<<<< Updated upstream
-  const navigate = useNavigate(); 
-  // const availableVenues = [
-  //   'Venue 1',
-  //   'Venue 2',
-  //   'Venue 3',
-  //   'Venue 4',
-  //   'Venue 5'
-  // ];
-  useEffect(() => {
-    const fetchVenues = async () => {
-      const { data, error } = await supabase.from('venues').select('id, venue_name, location, capacity, venuepicture');
-      if (error) {
-        console.error('Error fetching venues:', error.message);
-      } else {
-        setAvailableVenues(data);
-      }
-      setLoadingVenues(false);
-    };
-
     fetchVenues();
   }, []);
 
-=======
-    fetchVenues();
-  }, []);
-
->>>>>>> Stashed changes
   const handleSubmit = async (e) => {
     e.preventDefault();
   

@@ -29,7 +29,7 @@ export const AddEventBack = async ({ eventName, date, time, venue, description, 
         .from('event-pictures')
         .getPublicUrl(filePath);
 
-      pictureUrl = publicUrlData.publicUrl;
+      pictureUrl = publicUrlData.data.publicUrl;
     }
 
 console.log('Inserting into event table with:', {
@@ -63,3 +63,70 @@ if (insertError) {
     return { success: false, message: 'Unexpected error occurred' };
   }
 };
+export const deleteEvent = async (id) => {
+    try {
+      const { error: deleteError } = await supabase
+        .from('event')
+        .delete()
+        .eq('id', id);
+  
+      if (deleteError) {
+        console.error('Delete failed:', deleteError.message);
+        return { success: false, message: deleteError.message || 'Unknown error' };
+      }
+  
+      return { success: true };
+    } catch (error) {
+      console.error('Unexpected error:', error.message);
+      return { success: false, message: 'Unexpected error occurred' };
+    }
+  };
+  export const updateEvent = async ({id, name, date, venue, description, picture_url, time}) => {
+  try{
+      let pictureUrl = null;
+  
+      if (picture_url) {
+          const fileExt = picture_url.name.split('.').pop();
+          const fileName = `${Date.now()}.${fileExt}`;
+          const filePath = `venuepictures/${fileName}`;
+    
+          const { error: uploadError } = await supabase.storage
+            .from('venuepictures')
+            .upload(filePath, picture_url);
+    
+          if (uploadError) {
+            console.error('Image upload failed:', uploadError.message);
+            return { success: false, message: 'Image upload failed' };
+          }
+    
+          const { data: publicUrlData } = await supabase.storage
+            .from('event-pictures')
+            .getPublicUrl(filePath);
+    
+          pictureUrl = publicUrlData.publicUrl;
+        }
+        const updateFields = {};
+  
+      if (name) updateFields.name = name;
+      if (date) updateFields.date = date;
+      if (venue) updateFields.venue = venue;
+      if (description) updateFields.description = description;
+      if (pictureUrl) updateFields.picture_url = pictureUrl;
+      if (time) updateFields.time = time;
+  
+      const { error: updateError } = await supabase
+        .from('event')
+        .update(updateFields)
+        .eq('id', id); 
+  
+      if (updateError) {
+        console.error('Update failed:', updateError.message);
+        return { success: false, message: updateError.message || 'Unknown error' };
+      }
+  
+      return { success: true };
+  } catch (error) {
+      console.error('Unexpected error:', error.message);
+      return { success: false, message: 'Unexpected error occurred' };
+    }
+  };

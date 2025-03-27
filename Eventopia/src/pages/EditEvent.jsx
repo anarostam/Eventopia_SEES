@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
 import '../Css-folder/ViewEvent.css';
-
+import { updateEvent, deleteEvent } from './AddEventBack';
 // Initialize Supabase client
 const supabase = createClient(
   'https://fkbflmyfughlgxnzuazy.supabase.co',
@@ -58,7 +58,7 @@ const EditEvent = () => {
         </div>
       )}
 
-      <form onSubmit={handleUpdate}>
+      <form onSubmit={updateEvent}>
         <div className="form-field-wrapper">
           <label>Event Name</label>
           <input
@@ -80,7 +80,7 @@ const EditEvent = () => {
             required
           ></textarea>
         </div>
-        <div className="form-field-wrapper">
+        {/* <div className="form-field-wrapper">
           <label>Price</label>
           <input
             type="number"
@@ -90,7 +90,7 @@ const EditEvent = () => {
             onChange={handleChange}
             required
           />
-        </div>
+        </div> */}
         <div className="form-field-wrapper">
           <button type="submit" className="btn btn-primary">
             Update Event
