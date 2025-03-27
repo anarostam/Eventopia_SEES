@@ -50,7 +50,6 @@ export const Venue = async ({venueName, location, capacity, picture}) => {
   
 
 };
-
 export const updateVenue = async ({id, venue_name, location, capacity, picture}) => {
 
 try{

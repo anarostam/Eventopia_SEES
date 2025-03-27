@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
-import { createClient } from '@supabase/supabase-js';
 import { useNavigate } from 'react-router-dom';
+import { createClient } from '@supabase/supabase-js';
 import '../Css-folder/ViewEvent.css';
 
 // Initialize Supabase client
@@ -10,12 +11,12 @@ const supabase = createClient(
 );
 
 const ViewEvent = () => {
+  const navigate = useNavigate();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
-  // Fetch event data from the database
+  // Fetch event data from Supabase
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -26,7 +27,7 @@ const ViewEvent = () => {
 
         if (error) throw error;
 
-        setEvents(data); // Set the fetched data to state
+        setEvents(data);
       } catch (error) {
         setError('Failed to fetch events. Please try again later.');
         console.error(error);
@@ -38,14 +39,15 @@ const ViewEvent = () => {
     fetchEvents();
   }, []);
 
-  // Register event handler
+  // Handle registration and redirect to payment page
   const handleRegister = (event) => {
     const userId = localStorage.getItem('userId') || '1'; // Default for testing
     navigate('/payment', {
       state: {
         eventId: event.id,
         attendeeId: parseInt(userId),
-        ticketPrice: event.price
+        ticketPrice: event.price || 0,
+        eventName: event.name,
       }
     });
   };
@@ -71,6 +73,8 @@ const ViewEvent = () => {
               <span className="visually-hidden">Loading...</span>
             </div>
           </div>
+        ) : events.length === 0 ? (
+          <div className="col-12 text-center">No events available at the moment.</div>
         ) : (
           events.map((event) => (
             <div key={event.id} className="col-md-4 mb-4">
@@ -84,26 +88,18 @@ const ViewEvent = () => {
                 <div className="card-body d-flex flex-column">
                   <h5 className="card-title">{event.name}</h5>
                   <p className="card-text">{event.description}</p>
-                  <div className="mt-auto">
-                    <p className="card-text">
-                      <small className="text-muted">
-                        <i className="bi bi-calendar"></i> {event.date}
-                      </small>
-                    </p>
-                    <p className="card-text">
-                      <small className="text-muted">
-                        <i className="bi bi-geo-alt"></i> {event.venue}
-                      </small>
-                    </p>
-                    <div className="d-flex justify-content-between align-items-center">
-                      <span className="h5 mb-0">${event.price}</span>
-                      <button
-                        className="btn btn-primary"
-                        onClick={() => handleRegister(event)}
-                      >
-                        Register Now
-                      </button>
-                    </div>
+                  <p className="card-text"><strong>Date:</strong> {event.date}</p>
+                  <p className="card-text"><strong>Time:</strong> {event.time}</p>
+                  <p className="card-text"><strong>Venue:</strong> {event.venue}</p>
+
+                  <div className="d-flex justify-content-between align-items-center mt-auto">
+                    <span className="h5 mb-0">${event.price || 'Free'}</span>
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => handleRegister(event)}
+                    >
+                      Register Now
+                    </button>
                   </div>
                 </div>
               </div>
