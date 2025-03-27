@@ -13,6 +13,7 @@ const AddEvent = () => {
   const [venue, setVenue] = useState('');  // State for venue
   const [description, setDescription] = useState('');
   const [picture, setPicture] = useState(null);
+  const [price, setPrice] = useState('');
   const [availableVenues, setAvailableVenues] = useState([]);
   const [loadingVenues, setLoadingVenues] = useState(true);
 
@@ -47,6 +48,7 @@ const AddEvent = () => {
       time,
       venue,
       description,
+      price: parseFloat(price) || 0,
       picture,
     });
   
@@ -99,6 +101,18 @@ const AddEvent = () => {
             onChange={(e) => setTime(e.target.value)}
           />
         </div>
+        <div className="form-field-wrapper">
+          <label>Price (enter 0 for Free):</label>
+          <input
+            type="number"
+            min="0"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            placeholder="Enter ticket price..."
+            required
+          />
+        </div>
+
 
         {/* Venue Selection with Radio Buttons */}
         <div className="form-field-wrapper">

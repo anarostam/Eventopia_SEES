@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
 import '../Css-folder/ViewEvent.css';
+//import { useNavigate } from 'react-router-dom';
+import '../Css-folder/ViewEvent.css';
 
 // Initialize Supabase client
 const supabase = createClient(
@@ -15,6 +17,7 @@ const ViewEvent = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  //const navigate = useNavigate();
 
   // Fetch event data from Supabase
   useEffect(() => {
@@ -34,6 +37,7 @@ const ViewEvent = () => {
       } finally {
         setLoading(false);
       }
+      setLoading(false);
     };
 
     fetchEvents();

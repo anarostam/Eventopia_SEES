@@ -48,49 +48,6 @@ const Header = () => {
     navigate('/login');
   };
 
-//   const handleImageUpload = async (event) => {
-//     const file = event.target.files[0];
-//     if (!file || !user?.email) return;
-
-//     const fileExt = file.name.split(".").pop();
-//     const fileName = `${user.email}.${fileExt}`;
-//     const filePath = `profilepictures/${fileName}`;
-
-//     // Upload to Supabase Storage
-//     const { error: uploadError } = await supabase.storage
-//       .from("profilepictures")
-//       .upload(filePath, file, { upsert: true });
-
-//     if (uploadError) {
-//       console.error("Upload error:", uploadError.message);
-//       alert("Failed to upload profile image.");
-//       return;
-//     }
-
-//     // Get public URL
-//     const { data: urlData } = await supabase.storage
-//       .from("profilepictures")
-//       .getPublicUrl(filePath);
-
-//     const imageUrl = urlData.publicUrl;
-
-//     // Update image in Supabase user table
-//     const { error: updateError } = await supabase
-//       .from("user")
-//       .update({ profilepic: imageUrl })
-//       .eq("email", user.email);
-
-//     if (updateError) {
-//       console.error("Update error:", updateError.message);
-//       alert("Failed to save image to profile.");
-//       return;
-//     }
-
-//     // Show the image right away
-//     setProfileImage(imageUrl);
-//   };
-
-
 
 
 const handleImageUpload = async (event) => {
@@ -178,4 +135,5 @@ const handleImageUpload = async (event) => {
     </div>
   );
 };
+
 export default Header;
