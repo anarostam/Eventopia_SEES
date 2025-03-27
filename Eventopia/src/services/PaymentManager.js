@@ -1,4 +1,4 @@
-import { supabase } from "../Client"; 
+import { supabase } from "../Client";
 
 class PaymentManager {
   constructor() {
@@ -6,36 +6,31 @@ class PaymentManager {
       return PaymentManager.instance;
     }
     PaymentManager.instance = this;
-    
-    // Initialize payment states
+
     this.PAYMENT_STATUSES = {
-      PENDING: 'pending',
-      PROCESSING: 'processing',
-      COMPLETED: 'completed',
-      FAILED: 'failed',
-      REFUNDED: 'refunded'
+      PENDING: "pending",
+      PROCESSING: "processing",
+      COMPLETED: "completed",
+      FAILED: "failed",
+      REFUNDED: "refunded",
     };
 
     this.PAYMENT_TYPES = {
-      REGULAR: 'regular',
-      SPONSORSHIP: 'sponsorship'
+      REGULAR: "regular",
+      SPONSORSHIP: "sponsorship",
     };
 
     this.REGISTRATION_STATUSES = {
-      PENDING: 'pending',
-      CONFIRMED: 'confirmed',
-      CANCELLED: 'cancelled'
+      PENDING: "pending",
+      CONFIRMED: "confirmed",
+      CANCELLED: "cancelled",
     };
 
-    // Track active transactions to prevent duplicates
     this.activeTransactions = new Set();
-    // Track registrations
     this.registrations = new Map();
-    // Track tickets
     this.tickets = new Map();
   }
 
-  // Ensure singleton instance
   static getInstance() {
     if (!PaymentManager.instance) {
       PaymentManager.instance = new PaymentManager();
@@ -43,66 +38,77 @@ class PaymentManager {
     return PaymentManager.instance;
   }
 
-
-  // log payment to supabase
+  // ✅ logPayment now returns Supabase-generated ID
   async logPayment(eventId, attendeeId, amount, status) {
     try {
       const { data, error } = await supabase
-        .from('payments')
+        .from("payments")
         .insert([
           {
             eventID: eventId,
             attendeeID: attendeeId,
             amount: amount,
-            status: status
-          }
-        ]);
-      console.log("Supabase insert response: ", data, error);
+            status: status,
+          },
+        ])
+        .select() // ✅ needed to return inserted row
+        .single();
+
       if (error) {
-        console.error("Error logging payment to supabase: ", error);
+        console.error("Error logging payment to Supabase:", error);
+        return { data: null, error };
       }
-      return { data, error };
+
+      console.log("✅ Supabase insert success:", data);
+      return { data, error: null };
     } catch (error) {
-      console.error("Unexpected error logging payment: ", error);
+      console.error("Unexpected error logging payment:", error);
+      return { data: null, error };
     }
   }
 
-  // Process a new payment
   async processPayment(paymentData) {
-    const transactionId = `${paymentData.eventId}-${paymentData.attendeeId}-${Date.now()}`;
-    
-    // Check for duplicate transactions
-    if (this.activeTransactions.has(transactionId)) {
-      throw new Error('Duplicate transaction detected');
+    const transactionKey = `${paymentData.eventId}-${paymentData.attendeeId}-${Date.now()}`;
+
+    if (this.activeTransactions.has(transactionKey)) {
+      throw new Error("Duplicate transaction detected");
     }
 
     try {
-      // Add to active transactions
-      this.activeTransactions.add(transactionId);
+      this.activeTransactions.add(transactionKey);
 
-      // Create registration first
+      // 1. Create registration
       const registrationId = await this.createRegistration(paymentData);
-
-      // Update payment status
       paymentData.status = this.PAYMENT_STATUSES.PROCESSING;
 
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Update payment status on success
       paymentData.status = this.PAYMENT_STATUSES.COMPLETED;
 
-      // Generate ticket after successful payment
+      // 2. Generate ticket
       const ticketId = await this.generateTicket(paymentData, registrationId);
-      
-            
-      // log payment
-      await this.logPayment(paymentData.eventId, paymentData.attendeeId, paymentData.amount, true);
 
-      // Update registration status
-      await this.updateRegistrationStatus(registrationId, this.REGISTRATION_STATUSES.CONFIRMED);
+      // 3. Log payment to Supabase and grab real payment ID
+      const { data: paymentRow, error } = await this.logPayment(
+        paymentData.eventId,
+        paymentData.attendeeId,
+        paymentData.amount,
+        true
+      );
 
+      if (error || !paymentRow?.id) {
+        throw new Error("Payment logging failed.");
+      }
+
+      // 4. Update registration status
+      await this.updateRegistrationStatus(
+        registrationId,
+        this.REGISTRATION_STATUSES.CONFIRMED
+      );
+
+      // 5. Return values for confirmation/ticket page
       return {
-        paymentId: transactionId,
+        paymentId: paymentRow.id, // ✅ using Supabase-generated ID
         registrationId,
         ticketId,
         ...paymentData,
@@ -111,8 +117,7 @@ class PaymentManager {
       paymentData.status = this.PAYMENT_STATUSES.FAILED;
       throw error;
     } finally {
-      // Remove from active transactions
-      this.activeTransactions.delete(transactionId);
+      this.activeTransactions.delete(transactionKey);
     }
   }
 
@@ -123,7 +128,7 @@ class PaymentManager {
       eventId: paymentData.eventId,
       attendeeId: paymentData.attendeeId,
       status: this.REGISTRATION_STATUSES.PENDING,
-      type: paymentData.type // Regular or Sponsorship
+      type: paymentData.type,
     });
     return registrationId;
   }
@@ -145,86 +150,83 @@ class PaymentManager {
       attendeeId: paymentData.attendeeId,
       price: paymentData.amount,
       purchaseDate: new Date().toISOString(),
-      type: paymentData.type // Regular or Sponsorship
+      type: paymentData.type,
     });
     return ticketId;
   }
 
-  // Process a refund
   async processRefund(paymentId) {
     if (this.activeTransactions.has(paymentId)) {
-      throw new Error('Payment is currently being processed');
+      throw new Error("Payment is currently being processed");
     }
 
     try {
       this.activeTransactions.add(paymentId);
-      
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Update associated registration and ticket
-      const registration = Array.from(this.registrations.values())
-        .find(reg => reg.paymentId === paymentId);
-      
+      const registration = Array.from(this.registrations.values()).find(
+        (reg) => reg.paymentId === paymentId
+      );
+
       if (registration) {
-        await this.updateRegistrationStatus(registration.id, this.REGISTRATION_STATUSES.CANCELLED);
+        await this.updateRegistrationStatus(
+          registration.id,
+          this.REGISTRATION_STATUSES.CANCELLED
+        );
       }
 
       return {
         status: this.PAYMENT_STATUSES.REFUNDED,
         refundId: `REF-${paymentId}`,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
     } finally {
       this.activeTransactions.delete(paymentId);
     }
   }
 
-  // Apply discount to payment
   applyDiscount(amount, discountType, discountValue) {
-    if (discountType === 'percentage') {
+    if (discountType === "percentage") {
       return amount * (1 - discountValue / 100);
-    } else if (discountType === 'fixed') {
+    } else if (discountType === "fixed") {
       return Math.max(0, amount - discountValue);
     }
     return amount;
   }
 
-  // Validate payment data
   validatePaymentData(paymentData) {
     const errors = [];
-    
+
     if (!Number.isInteger(paymentData.eventId)) {
-      errors.push('Invalid event ID');
+      errors.push("Invalid event ID");
     }
-    
+
     if (!Number.isInteger(paymentData.attendeeId)) {
-      errors.push('Invalid attendee ID');
+      errors.push("Invalid attendee ID");
     }
-    
-    if (typeof paymentData.amount !== 'number' || paymentData.amount <= 0) {
-      errors.push('Invalid payment amount');
+
+    if (typeof paymentData.amount !== "number" || paymentData.amount <= 0) {
+      errors.push("Invalid payment amount");
     }
 
     if (!Object.values(this.PAYMENT_TYPES).includes(paymentData.type)) {
-      errors.push('Invalid payment type');
+      errors.push("Invalid payment type");
     }
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   }
 
-  // Get registration status
   getRegistrationStatus(registrationId) {
     const registration = this.registrations.get(registrationId);
     return registration ? registration.status : null;
   }
 
-  // Get ticket details
   getTicketDetails(ticketId) {
     return this.tickets.get(ticketId);
   }
 }
 
-export default PaymentManager; 
+export default PaymentManager;

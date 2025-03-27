@@ -21,6 +21,8 @@ import ManageVenue from './pages/ManageVenue';
 import EditVenue from './pages/EditVenue';
 import MyEvents from './pages/MyEvents';
 import Chat from './components/Chatroom/ChatRoomback';
+import LetsChat from "./pages/LetsChat";
+
 
 function App() {
   const [user, setUser] = useState(null);
@@ -54,6 +56,8 @@ function App() {
         <Route path="/editVenue" element={<EditVenue />} />
         <Route path="/myEvents" element={<MyEvents />} />
         <Route path="/chat" element={<Chat />} />
+        <Route path="/letschat" element={<LetsChat />} />
+
       </Routes>
       <Footer />
     </Router>

@@ -222,4 +222,4 @@ const PaymentForm = ({ eventId, attendeeId, ticketPrice }) => {
   );
 };
 
-export default PaymentForm; 
+export default PaymentForm;

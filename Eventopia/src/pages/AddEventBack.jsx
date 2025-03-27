@@ -64,7 +64,6 @@ export const AddEventBack = async ({ eventName, date, time, venue, description, 
   }
 };
 
-
 export const updateEvent = async ({ id, name, date, venue, description, picture_url, time, price }) => {
   try {
     let pictureUrl = null;
@@ -97,7 +96,8 @@ export const updateEvent = async ({ id, name, date, venue, description, picture_
     if (description) updateFields.description = description;
     if (pictureUrl) updateFields.picture_url = pictureUrl;
     if (time) updateFields.time = time;
-    if (price !== undefined) updateFields.price = parseFloat(price); 
+
+    if (price !== undefined) updateFields.price = parseFloat(price); // ✅ update price
 
     const { error: updateError } = await supabase
       .from('event')
@@ -143,4 +143,5 @@ export const deleteEvent = async (id) => {
     console.error('Unexpected error:', error.message);
     return { success: false, message: 'Unexpected error occurred' };
   }
+
 };

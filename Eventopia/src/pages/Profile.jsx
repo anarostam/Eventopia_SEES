@@ -1,9 +1,7 @@
-
 import React, { useEffect, useState } from "react";
 import "../Css-folder/index.css";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../Client";
-import Chat from "../components/Chatroom/ChatRoomback";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -45,12 +43,21 @@ const Profile = () => {
       <h1>Welcome, {user.name}!</h1>
       <p className="text-muted">Role: {roleText[user.role] || "Unknown"}</p>
 
-      <div className="btn-group mt-4">
+      <div className="btn-group mt-4 d-flex flex-column gap-2">
+        {/* ✅ Common Buttons for All Users */}
+        <Link to="/ViewEvent">
+          <button className="btn btn-secondary">View Events</button>
+        </Link>
+
+        <Link to="/MyEvents" state={{ currentUser: user }}>
+          <button className="btn btn-secondary">My Events</button>
+        </Link>
+
+        {/* ✅ Role-Specific Buttons */}
         {user.role === 1 && (
           <>
             <Link to="/AddEvent"><button className="btn btn-primary">Add an Event</button></Link>
             <Link to="/AddVenue"><button className="btn btn-primary">Add a Venue</button></Link>
-            <Link to="/ViewEvent"><button className="btn btn-secondary">View Events</button></Link>
             <Link to="/ViewVenue"><button className="btn btn-secondary">View Venues</button></Link>
             <Link to="/ManageEvent"><button className="btn btn-secondary">Manage Event</button></Link>
             <Link to="/ManageVenue"><button className="btn btn-secondary">Manage Venue</button></Link>
@@ -59,9 +66,7 @@ const Profile = () => {
 
         {user.role === 2 && (
           <>
-            <Link to="/ViewEvent"><button className="btn btn-primary">Browse Events</button></Link>
             <Link to="/ViewVenue"><button className="btn btn-primary">Browse Venues</button></Link>
-            <Link to="/MyEvents"><button className="btn btn-primary">My Events</button></Link>
           </>
         )}
 
@@ -69,10 +74,13 @@ const Profile = () => {
         {user.role === 4 && <p>Stakeholder view coming soon...</p>}
       </div>
 
+      {/* ✅ Chat Button */}
       <div className="mt-5">
-      <h2>Chatroom</h2>
-      <Chat currentUser={user} />
-    </div>
+        <h2>Chatroom</h2>
+        <Link to="/letschat" state={{ user }}>
+          <button className="btn btn-success">Let's Chat</button>
+        </Link>
+      </div>
     </div>
   );
 };

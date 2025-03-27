@@ -8,12 +8,20 @@ const PaymentConfirmation = () => {
   const paymentDetails = location.state || {};
 
   const handleViewTicket = () => {
-    // TODO: Navigate to ticket view once implemented
-    console.log('View ticket for payment:', paymentDetails.paymentId);
+    navigate('/view-tickets', {
+      state: {
+        paymentId: paymentDetails.paymentId,
+        ticketId: paymentDetails.ticketId,
+        eventId: paymentDetails.eventId,
+        attendeeId: paymentDetails.attendeeId,
+        amount: paymentDetails.amount,
+        type: paymentDetails.type
+      }
+    });
   };
 
   const handleBackToEvents = () => {
-    navigate('/'); // Navigate to events listing page
+    navigate('/');
   };
 
   return (
@@ -60,4 +68,4 @@ const PaymentConfirmation = () => {
   );
 };
 
-export default PaymentConfirmation; 
+export default PaymentConfirmation;
