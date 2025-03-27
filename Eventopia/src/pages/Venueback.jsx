@@ -51,52 +51,53 @@ export const Venue = async ({venueName, location, capacity, picture}) => {
 
 };
 
-export const updateVenue = async ({id, venueName, location, capacity, picture}) => {
+export const updateVenue = async ({id, venue_name, location, capacity, picture}) => {
+
 try{
-    let pictureUrl = null;
+  let pictureUrl = null;
 
-    if (picture) {
-        const fileExt = picture.name.split('.').pop();
-        const fileName = `${Date.now()}.${fileExt}`;
-        const filePath = `venuepictures/${fileName}`;
-  
-        const { error: uploadError } = await supabase.storage
-          .from('venuepictures')
-          .upload(filePath, picture);
-  
-        if (uploadError) {
-          console.error('Image upload failed:', uploadError.message);
-          return { success: false, message: 'Image upload failed' };
-        }
-  
-        const { data: publicUrlData } = await supabase.storage
-          .from('venuepictures')
-          .getPublicUrl(filePath);
-  
-        pictureUrl = publicUrlData.publicUrl;
+  if (picture) {
+      const fileExt = picture.name.split('.').pop();
+      const fileName = `${Date.now()}.${fileExt}`;
+      const filePath = `venuepictures/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('venuepictures')
+        .upload(filePath, picture);
+
+      if (uploadError) {
+        console.error('Image upload failed:', uploadError.message);
+        return { success: false, message: 'Image upload failed' };
       }
-      const updateFields = {};
 
-    if (venueName) updateFields.venue_name = venueName;
-    if (location) updateFields.location = location;
-    if (capacity) updateFields.capacity = capacity;
-    if (pictureUrl) updateFields.venuepicture = pictureUrl;
+      const { data: publicUrlData } = await supabase.storage
+        .from('venuepictures')
+        .getPublicUrl(filePath);
 
-    const { error: updateError } = await supabase
-      .from('venues')
-      .update(updateFields)
-      .eq('id', id); 
-
-    if (updateError) {
-      console.error('Update failed:', updateError.message);
-      return { success: false, message: updateError.message || 'Unknown error' };
+      pictureUrl = publicUrlData.publicUrl;
     }
+    const updateFields = {};
 
-    return { success: true };
-} catch (error) {
-    console.error('Unexpected error:', error.message);
-    return { success: false, message: 'Unexpected error occurred' };
+  if (venue_name) updateFields.venueName = venue_name;
+  if (location) updateFields.location = location;
+  if (capacity) updateFields.capacity = capacity;
+  if (pictureUrl) updateFields.venuepicture = pictureUrl;
+
+  const { error: updateError } = await supabase
+    .from('venues')
+    .update(updateFields)
+    .eq('id', id); 
+
+  if (updateError) {
+    console.error('Update failed:', updateError.message);
+    return { success: false, message: updateError.message || 'Unknown error' };
   }
+
+  return { success: true };
+} catch (error) {
+  console.error('Unexpected error:', error.message);
+  return { success: false, message: 'Unexpected error occurred' };
+}
 };
 export const deleteVenue = async (id) => {
     try {

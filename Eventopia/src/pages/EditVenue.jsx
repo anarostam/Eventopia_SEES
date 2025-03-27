@@ -2,45 +2,62 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
 import '../Css-folder/ViewEvent.css';
-
+import { updateVenue } from './Venueback';
+import { supabase } from '../Client';
 // Initialize Supabase client
-const supabase = createClient(
-    'https://fkbflmyfughlgxnzuazy.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZrYmZsbXlmdWdobGd4bnp1YXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkyOTk0MTQsImV4cCI6MjA1NDg3NTQxNH0.GQCJ-XBiyZAD2tVXVwY_RWFaF6dHejPGKW5jy6p0deA'
-  );
+// const supabase = createClient(
+//     'https://fkbflmyfughlgxnzuazy.supabase.co',
+//     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZrYmZsbXlmdWdobGd4bnp1YXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkyOTk0MTQsImV4cCI6MjA1NDg3NTQxNH0.GQCJ-XBiyZAD2tVXVwY_RWFaF6dHejPGKW5jy6p0deA'
+//   );
 
 const EditVenue = () => {
   const { state } = useLocation();
   const { venue } = state;
   const [formData, setFormData] = useState(venue);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!venue) {
-      navigate('/ManageVenue'); // Redirect if no venue to edit
+      navigate('/ManageVenue'); 
     }
   }, [venue, navigate]);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    if (e.target.name === "venuepicture") {
+      const file = e.target.files[0]; 
+      console.log("Selected file:", file); 
+      setFormData((prevData) => ({
+        ...prevData,
+        venuepicture: file, 
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [e.target.name]: e.target.value,
+      }));
+    }
   };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    const { error } = await supabase
-      .from('venues')
-      .update(formData)
-      .eq('id', formData.id);
+  const result = await updateVenue({
+    id: formData.id,
+    venueName: formData.venue_name,
+    location: formData.location,
+    capacity: formData.capacity,
+    picture: formData.venuepicture,
+  });
 
-    if (error) {
-      alert('Error updating venue');
-    } else {
-      alert('Venue updated successfully');
+  if (!result.success) {
+    alert(result.message);
+  } else {
+    setShowConfirmation(true);
+    setTimeout(() => {
+      setShowConfirmation(false);
       navigate('/ManageVenue');
-    }
+    }, 3000);
+  }
   };
 
   return (
@@ -79,6 +96,13 @@ const EditVenue = () => {
             onChange={handleChange}
             required
           />
+        </div>
+        <div className="form-field-wrapper">
+          <label>Venue Picture</label>
+          <input type="file" className="form-control" name="venuepicture" onChange={handleChange} accept="image/*" />
+          {formData.venuepicture && typeof formData.venuepicture === 'string' && (
+            <img src={formData.venuepicture} alt="Venue" className="event-preview" />
+          )}
         </div>
         <div className="form-field-wrapper">
           <button type="submit" className="btn btn-primary">

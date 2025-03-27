@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { useNavigate } from 'react-router-dom';
 import '../Css-folder/ViewEvent.css';
+import { deleteVenue } from './Venueback';
 
 // Initialize Supabase client
 const supabase = createClient(
@@ -98,7 +99,7 @@ const ManageVenue = () => {
                     <button className="btn btn-warning" onClick={() => handleEdit(venue)}>
                       Edit Venue
                     </button>
-                    <button className="btn btn-danger" onClick={() => handleDelete(venue.id)}>
+                    <button className="btn btn-danger" onClick={() => deleteVenue(venue.id)}>
                       Delete Venue
                     </button>
                   </div>
