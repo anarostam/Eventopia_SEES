@@ -21,19 +21,6 @@ const AddEvent = () => {
     'Venue 5'
   ];
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   // Backend Logic
-  //   console.log({
-  //     eventName,
-  //     date,
-  //     time,
-  //     venue,
-  //     description,
-  //     picture: picture ? picture.name : '',
-  //   });
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
   
