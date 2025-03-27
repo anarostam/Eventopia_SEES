@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { createClient } from '@supabase/supabase-js';
 import { useNavigate } from 'react-router-dom';
+import { createClient } from '@supabase/supabase-js';
+import '../Css-folder/ViewEvent.css';
+//import { useNavigate } from 'react-router-dom';
 import '../Css-folder/ViewEvent.css';
 
 // Initialize Supabase client
@@ -10,10 +12,11 @@ const supabase = createClient(
 );
 
 const ViewEvent = () => {
+  const navigate = useNavigate();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   // Fetch event data from the database
   useEffect(() => {
@@ -33,6 +36,7 @@ const ViewEvent = () => {
       } finally {
         setLoading(false);
       }
+      setLoading(false);
     };
 
     fetchEvents();
@@ -71,6 +75,8 @@ const ViewEvent = () => {
               <span className="visually-hidden">Loading...</span>
             </div>
           </div>
+        ) : events.length === 0 ? (
+          <div className="col-12 text-center">No events available at the moment.</div>
         ) : (
           events.map((event) => (
             <div key={event.id} className="col-md-4 mb-4">
