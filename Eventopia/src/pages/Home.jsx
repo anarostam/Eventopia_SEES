@@ -49,6 +49,7 @@ const Home = () => {
           </div>
         </div>
       </div>
+      
 
       <div class="container">
   <div class="row">
@@ -57,8 +58,8 @@ const Home = () => {
       <div class="card">
         <img src={Eventimage1} class="card-img-top" alt="..."/>
         <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          <h5 class="card-title">Networking & Collaboration Summit</h5>
+          <p class="card-text">Join industry leaders and professionals for a dynamic networking experience, where collaborations spark innovation and partnerships. Meet like-minded individuals and expand your professional network in an interactive environment.</p>
         </div>
       </div>
     </div>
@@ -68,8 +69,8 @@ const Home = () => {
       <div class="card">
         <img src={Eventimage2} class="card-img-top" alt="..."/>
         <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          <h5 class="card-title">Global Tech Conference</h5>
+          <p class="card-text">The latest breakthroughs in technology will take center stage as experts from across the world share their insights. Discover cutting-edge trends and explore future advancements that are shaping the tech industry.</p>
         </div>
       </div>
     </div>
@@ -79,8 +80,8 @@ const Home = () => {
       <div class="card">
         <img src={Eventimage3} class="card-img-top" alt="..."/>
         <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          <h5 class="card-title">Digital Transformation Expo</h5>
+          <p class="card-text">This event focuses on how digital tools and technologies are transforming businesses and industries. Learn from real-world case studies and explore the future of digital innovation with leading professionals and thought leaders.</p>
         </div>
       </div>
     </div>
