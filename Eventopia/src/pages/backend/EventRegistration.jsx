@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { supabase } from "../Client";
+import { supabase } from "../../Client";
 
 export async function registerForEvent(userId, eventId) {
     // Check if the user's payment is completed

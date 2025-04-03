@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../Css-folder/EventConfirmation.css';
+import '../../Css-folder/EventConfirmation.css';
 
 
 const EventConfirmation = () => {

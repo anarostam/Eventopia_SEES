@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { useNavigate } from 'react-router-dom';
-import '../Css-folder/ViewEvent.css';
-import { deleteVenue } from './Venueback';
+import '../../Css-folder/ViewEvent.css';
+import { deleteVenue } from '../backend/Venueback';
 
 // Initialize Supabase client
 const supabase = createClient(

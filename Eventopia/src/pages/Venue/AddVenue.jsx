@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 // import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import '../Css-folder/AddVenue.css'; 
-import { Venue } from "./Venueback";
+import '../../Css-folder/AddVenue.css'; 
+import { Venue } from "../backend/Venueback";
 
 const AddVenue = () => {
   const [venueName, setVenueName] = useState('');

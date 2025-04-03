@@ -1,90 +1,60 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
-import '../Css-folder/ViewEvent.css';
+import '../../Css-folder/ViewEvent.css';
+//import { useNavigate } from 'react-router-dom';
 
 // Initialize Supabase client
 const supabase = createClient(
   'https://fkbflmyfughlgxnzuazy.supabase.co',
-  'your-supabase-key'
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZrYmZsbXlmdWdobGd4bnp1YXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkyOTk0MTQsImV4cCI6MjA1NDg3NTQxNH0.GQCJ-XBiyZAD2tVXVwY_RWFaF6dHejPGKW5jy6p0deA'
 );
 
-const MyEvent = () => {
+const ViewEvent = () => {
   const navigate = useNavigate();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  //const navigate = useNavigate();
 
-  const [user, setUser] = useState(null);
-  const [userId, setUserId] = useState(null); // Set userId state
-  
+  // Fetch event data from Supabase
   useEffect(() => {
-    // Fetch the logged-in user data from Supabase
-    const fetchUserData = async () => {
-      const { data: sessionData, error: sessionError } = await supabase.auth.getUser();
-      if (sessionError || !sessionData.user) {
-        navigate('/login');
-        return;
-      }
-
-      const storedUser = JSON.parse(localStorage.getItem("user"));
-      if (!storedUser) {
-        navigate('/login');
-        return;
-      }
-
-      setUser({ ...storedUser, email: sessionData.user.email });
-      setUserId(sessionData.user.id); // Set userId from session
-    };
-
-    fetchUserData();
-  }, [navigate]);
-
-  useEffect(() => {
-    // If no userId is set, we shouldn't try to fetch events
-    if (!userId) {
-      setError('User not logged in');
-      setLoading(false);
-      return;
-    }
-
-    // Fetch events the user is registered for by joining the event_register and event tables
-    const fetchUserEvents = async () => {
+    const fetchEvents = async () => {
       try {
         const { data, error } = await supabase
-          .from('event_register')
-          .select('event_id, event(name, description, date, time, venue, price, picture_url)')
-          .eq('attendeeid', userId);
+          .from('event')
+          .select('*')
+          .order('date', { ascending: true });
 
         if (error) throw error;
 
-        const userEvents = data.map((registration) => registration.event);
-
-        setEvents(userEvents);
+        setEvents(data);
       } catch (error) {
         setError('Failed to fetch events. Please try again later.');
         console.error(error);
       } finally {
         setLoading(false);
       }
+      setLoading(false);
     };
 
-    fetchUserEvents();
-  }, [userId]);
+    fetchEvents();
+  }, []);
 
   // Handle registration and redirect to payment page
   const handleRegister = (event) => {
+    const userId = localStorage.getItem('userId') || '1'; // Default for testing
     navigate('/payment', {
       state: {
         eventId: event.id,
-        attendeeId: userId, // Use the userId from the session
+        attendeeId: parseInt(userId),
         ticketPrice: event.price || 0,
         eventName: event.name,
       }
     });
   };
 
-  // If user is not logged in or events fail to load, show error
   if (error) {
     return (
       <div className="container mt-5">
@@ -97,7 +67,7 @@ const MyEvent = () => {
 
   return (
     <div className="container mt-5">
-      <h1 className="text-center mb-4">Your Registered Events</h1>
+      <h1 className="text-center mb-4">Upcoming Events</h1>
 
       <div className="row">
         {loading ? (
@@ -107,7 +77,7 @@ const MyEvent = () => {
             </div>
           </div>
         ) : events.length === 0 ? (
-          <div className="col-12 text-center">No events you are registered for.</div>
+          <div className="col-12 text-center">No events available at the moment.</div>
         ) : (
           events.map((event) => (
             <div key={event.id} className="col-md-4 mb-4">
@@ -144,4 +114,4 @@ const MyEvent = () => {
   );
 };
 
-export default MyEvent;
+export default ViewEvent;
