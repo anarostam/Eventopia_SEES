@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 //import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import '../Css-folder/AddEvent.css';
-import { AddEventBack} from "./AddEventBack";
+import '../../Css-folder/AddEvent.css';
+import { AddEventBack} from "../backend/AddEventBack";
 
-import { supabase } from "../Client";
+import { supabase } from "../../Client";
 
 const AddEvent = () => {
   const [eventName, setEventName] = useState('');
