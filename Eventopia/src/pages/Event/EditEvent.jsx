@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
-import '../Css-folder/ViewEvent.css';
-import { updateEvent } from './AddEventBack';
+import '../../Css-folder/ViewEvent.css';
+import { updateEvent } from '../backend/AddEventBack'; 
 
 const supabase = createClient(
   'https://fkbflmyfughlgxnzuazy.supabase.co',

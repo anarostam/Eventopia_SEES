@@ -27,7 +27,7 @@
   .s-container{
     max-width: 90%;
     margin: auto;
-    padding: 2em;
+    padding: 2.5em;
   }
 
 .header{
@@ -162,4 +162,3 @@ input{
   .profile-image-container:hover .profile-image {
     border-color: #007bff; 
   }
-  
