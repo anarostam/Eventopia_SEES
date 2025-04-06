@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import './Css-folder/App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -8,11 +7,19 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
 import Footer from './components/Footer';
-import AddEvent from './pages/AddEvent';
-import EventConfirmation from './pages/EventConfirmation';
-import AddVenue from './pages/AddVenue';
-import VenueConfirmation from './pages/VenueConfirmation';
-import ViewEvent from './pages/ViewEvent';
+import AddEvent from './pages/Event/AddEvent';
+import EventConfirmation from './pages/confirmation/EventConfirmation';
+import AddVenue from './pages/Venue/AddVenue';
+import VenueConfirmation from './pages/confirmation/VenueConfirmation';
+import ViewEvent from './pages/Event/ViewEvent';
+import Payment from './pages/Payment';
+import PaymentConfirmation from './components/payment/PaymentConfirmation';
+import ViewVenue from './pages/Venue/ViewVenue';
+import ManageEvent from './pages/Event/ManageEvent';
+import EditEvent from './pages/Event/EditEvent';
+import ManageVenue from './pages/Venue/ManageVenue';
+import EditVenue from './pages/Venue/EditVenue';
+import MyEvents from './pages/Event/MyEvents';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -37,6 +44,14 @@ function App() {
         <Route path="/addVenue" element={<AddVenue />} />
         <Route path="/venueConfirmation" element={<VenueConfirmation />} />
         <Route path="/ViewEvent" element={<ViewEvent />} />
+        <Route path="/payment" element={<Payment />} />
+        <Route path="/payment-confirmation" element={<PaymentConfirmation />} />
+        <Route path="/viewVenue" element={<ViewVenue />} />
+        <Route path="/manageEvent" element={<ManageEvent />} />
+        <Route path="/editEvent" element={<EditEvent />} />
+        <Route path="/manageVenue" element={<ManageVenue />} />
+        <Route path="/editVenue" element={<EditVenue />} />
+        <Route path="/myEvents" element={<MyEvents />} />
       </Routes>
       <Footer />
     </Router>

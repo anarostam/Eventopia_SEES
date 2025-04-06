@@ -27,7 +27,7 @@
   .s-container{
     max-width: 90%;
     margin: auto;
-    padding: 2em;
+    padding: 2.5em;
   }
 
 .header{
@@ -131,3 +131,34 @@ input{
         padding: 1em;
       }
 }
+
+
+/* Profile image container */
+.profile-image-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 20px;
+    cursor: pointer;
+  }
+  
+  .profile-image {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border: 2px solid #ddd;
+  }
+  
+  .profile-image-upload {
+    display: none; 
+  }
+  
+  
+  .profile-image-label {
+    cursor: pointer;
+  }
+  
+  .profile-image-container:hover .profile-image {
+    border-color: #007bff; 
+  }
