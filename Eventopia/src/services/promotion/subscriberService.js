@@ -1,4 +1,4 @@
-import { supabase } from "../Client.js";
+import { supabase } from "../../Client.js";
 
 export async function fetchSubscribers() {
   const { data, error } = await supabase.from("subscribers").select("email");

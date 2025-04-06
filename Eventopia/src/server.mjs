@@ -19,14 +19,15 @@ const transporter = nodemailer.createTransport({
 
 
 app.post('/api/send-email', async (req, res) => {
-    const { to, subject, text } = req.body;
+    const { to, subject, text, html} = req.body;
 
     try {
         await transporter.sendMail({
             from: 'eventopia9@gmail.com',
             to,
             subject,
-            text
+            text,
+            html
         });
         console.log(`Email sent to ${to}`);
         res.status(200).json({ message: 'Email sent successfully' });

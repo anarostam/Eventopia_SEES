@@ -1,4 +1,4 @@
-import { supabase } from "../Client.js";
+import { supabase } from "../../Client.js";
 import { EventPromoter } from "./eventPromoter.js";
 import { User } from "./user.js";
 import { fetchSubscribers } from "./subscriberService.js";
@@ -28,8 +28,12 @@ export function listenForEvents() {
           id: payload.new.id,
           name: payload.new.name,
           description: payload.new.description,
+          venue : payload.new.venue,
           date: payload.new.date,
           time: payload.new.time,
+          price: payload.new.price,
+          picture_url: payload.new.picture_url,
+          registration_link: "http://localhost:3000/ViewEvent"
         };
 
         await notifySubscribers(eventData);
