@@ -55,7 +55,7 @@ export const updateVenue = async ({id, venue_name, location, capacity, picture})
 try{
   let pictureUrl = null;
 
-  if (picture && typeof picture_url === 'object') {
+  if (picture && typeof picture === 'object') {
       const fileExt = picture.name.split('.').pop();
       const fileName = `${Date.now()}.${fileExt}`;
       const filePath = `venuepictures/${fileName}`;
@@ -75,8 +75,7 @@ try{
 
       pictureUrl = publicUrlData.publicUrl;
     }
-    const updateFields = {};
-
+  const updateFields = {};
   if (venue_name) updateFields.venueName = venue_name;
   if (location) updateFields.location = location;
   if (capacity) updateFields.capacity = capacity;
