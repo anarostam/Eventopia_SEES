@@ -20,6 +20,7 @@ import EditEvent from './pages/EditEvent';
 import ManageVenue from './pages/ManageVenue';
 import EditVenue from './pages/EditVenue';
 import MyEvents from './pages/MyEvents';
+import Chat from './components/Chatroom/ChatRoomback';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -52,6 +53,7 @@ function App() {
         <Route path="/manageVenue" element={<ManageVenue />} />
         <Route path="/editVenue" element={<EditVenue />} />
         <Route path="/myEvents" element={<MyEvents />} />
+        <Route path="/chat" element={<Chat />} />
       </Routes>
       <Footer />
     </Router>
