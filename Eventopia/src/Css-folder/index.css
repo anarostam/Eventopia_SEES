@@ -70,7 +70,7 @@
     border:1px solid #000;
     text-decoration: none; */
 
-    display: block;  
+    /* display: block;   */
     cursor: pointer;
     border: none;
     background-color: #000 !important; /* Force black background */
@@ -162,3 +162,22 @@ input{
   .profile-image-container:hover .profile-image {
     border-color: #007bff; 
   }
+
+.section{
+  border: 1px solid #000;
+  padding: 2em;
+}
+
+.Event, .Venue{
+ 
+  padding: 1em;
+  border: 1px solid #d10b0b;
+  display: flex;
+  gap: 10px; 
+  flex-wrap: wrap
+}
+
+.Event button, .Venue button {
+  flex: 1;
+  min-width: 100px;
+}

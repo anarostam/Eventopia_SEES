@@ -52,7 +52,7 @@
 //   const handleImageUpload = async (event) => {
 //     const file = event.target.files[0];
 //     if (!file) return;
-  
+
 //     const { success, publicUrl, message } = await uploadProfilePicture(file);
 //     if (success) {
 //       setProfileImage(publicUrl);
@@ -117,7 +117,7 @@
 //             <Link to="/ViewVenue">
 //               <button className="btn btn-primary">Browse Venues</button>
 //             </Link>
-            
+
 //           </>
 //         )}
 
@@ -184,12 +184,39 @@ const Profile = () => {
       <div className="btn-group mt-4">
         {user.role === 1 && (
           <>
-            <Link to="/AddEvent"><button className="btn btn-primary">Add an Event</button></Link>
-            <Link to="/AddVenue"><button className="btn btn-primary">Add a Venue</button></Link>
-            <Link to="/ViewEvent"><button className="btn btn-secondary">View Events</button></Link>
-            <Link to="/ViewVenue"><button className="btn btn-secondary">View Venues</button></Link>
-            <Link to="/ManageEvent"><button className="btn btn-secondary">Manage Event</button></Link>
-            <Link to="/ManageVenue"><button className="btn btn-secondary">Manage Venue</button></Link>
+            <div className="section">
+               {/* Event Section */}
+              <div className="Event">
+                <h2>Events</h2>
+                <br></br>
+                <br></br>
+                <Link to="/AddEvent">
+                  <button className="btn btn-primary">Add Event</button>
+                </Link>
+                <Link to="/ManageEvent">
+                  <button className="btn btn-secondary">Manage Event</button>
+                </Link>
+                <Link to="/ViewEvent">
+                  <button className="btn btn-secondary">View Event</button>
+                </Link>
+              </div>
+              <br />
+
+              {/* Venue Section */}
+              <div className="Venue">
+                <h2>Venues</h2>
+                <Link to="/AddVenue">
+                  <button className="btn btn-primary">Add Venue</button>
+                </Link>
+                <Link to="/ManageVenue">
+                  <button className="btn btn-secondary">Manage Venue</button>
+                </Link>
+                <Link to="/ViewVenue">
+                  <button className="btn btn-secondary">View Venue</button>
+                </Link>
+              </div>
+            </div>
+
           </>
         )}
 
