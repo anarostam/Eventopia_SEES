@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PaymentManager from '../../services/PaymentManager';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -19,14 +19,11 @@ const PaymentForm = ({ eventId, attendeeId, ticketPrice }) => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [step, setStep] = useState('payment'); // payment, processing, complete
+  const [step, setStep] = useState('payment');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setPaymentData(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
+    setPaymentData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -55,7 +52,6 @@ const PaymentForm = ({ eventId, attendeeId, ticketPrice }) => {
     console.log("Attendee ID", attendeeId);
     console.log("User ID: ", userData.id);
 
-    // Validate payment data
     const validation = paymentManager.validatePaymentData(paymentData);
     if (!validation.isValid) {
       setError(validation.errors.join(', '));
@@ -65,20 +61,13 @@ const PaymentForm = ({ eventId, attendeeId, ticketPrice }) => {
 
     try {
       setStep('processing');
-      // Process payment through singleton manager
       const result = await paymentManager.processPayment(paymentData);
-      
-      // Check registration status
+
       const registrationStatus = paymentManager.getRegistrationStatus(result.registrationId);
       if (registrationStatus !== paymentManager.REGISTRATION_STATUSES.CONFIRMED) {
         throw new Error('Registration failed to confirm');
       }
 
-      // Register for the event after payment is successful
-      const registrationResult = await registerForEvent(userData.id, eventId);
-      if (!registrationResult.success) {
-        throw new Error(registrationResult.message || 'Event registration failed.');
-      }
       // Get ticket details
       const ticketDetails = paymentManager.getTicketDetails(result.ticketId);
       if (!ticketDetails) {
@@ -86,9 +75,8 @@ const PaymentForm = ({ eventId, attendeeId, ticketPrice }) => {
       }
 
       setStep('complete');
-      
-      // Navigate to confirmation page with all details
-      navigate('/payment-confirmation', { 
+
+      navigate('/payment-confirmation', {
         state: {
           ...result,
           ticket: ticketDetails
@@ -105,9 +93,7 @@ const PaymentForm = ({ eventId, attendeeId, ticketPrice }) => {
 
   const renderProcessingStep = () => (
     <div className="text-center p-5">
-      <div className="spinner-border text-primary mb-3" role="status">
-        <span className="visually-hidden">Processing payment...</span>
-      </div>
+      <div className="spinner-border text-primary mb-3" role="status" />
       <h4>Processing Your Payment</h4>
       <p className="text-muted">Please do not close this window...</p>
     </div>
@@ -139,64 +125,29 @@ const PaymentForm = ({ eventId, attendeeId, ticketPrice }) => {
           onChange={handleInputChange}
           required
         >
-          <option value={paymentManager.PAYMENT_TYPES.REGULAR}>Regular Payment</option>
+          <option value={paymentManager.PAYMENT_TYPES.REGULAR}>Regular</option>
           <option value={paymentManager.PAYMENT_TYPES.SPONSORSHIP}>Sponsorship</option>
         </select>
       </div>
 
       <div className="mb-3">
         <label htmlFor="cardNumber" className="form-label">Card Number</label>
-        <input
-          type="text"
-          className="form-control"
-          id="cardNumber"
-          placeholder="1234 5678 9012 3456"
-          pattern="[0-9\s]{13,19}"
-          maxLength="19"
-          required
-        />
+        <input className="form-control" id="cardNumber" placeholder="1234 5678 9012 3456" required />
       </div>
 
       <div className="row mb-3">
         <div className="col-md-6">
           <label htmlFor="expiryDate" className="form-label">Expiry Date</label>
-          <input
-            type="text"
-            className="form-control"
-            id="expiryDate"
-            placeholder="MM/YY"
-            pattern="(0[1-9]|1[0-2])\/([0-9]{2})"
-            maxLength="5"
-            required
-          />
+          <input className="form-control" id="expiryDate" placeholder="MM/YY" required />
         </div>
         <div className="col-md-6">
           <label htmlFor="cvv" className="form-label">CVV</label>
-          <input
-            type="text"
-            className="form-control"
-            id="cvv"
-            placeholder="123"
-            pattern="[0-9]{3,4}"
-            maxLength="4"
-            required
-          />
+          <input className="form-control" id="cvv" placeholder="123" required />
         </div>
       </div>
 
-      <button
-        type="submit"
-        className="btn btn-primary w-100"
-        disabled={loading}
-      >
-        {loading ? (
-          <span>
-            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-            Processing...
-          </span>
-        ) : (
-          'Pay Now'
-        )}
+      <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+        {loading ? 'Processing...' : 'Pay Now'}
       </button>
     </form>
   );
@@ -208,11 +159,7 @@ const PaymentForm = ({ eventId, attendeeId, ticketPrice }) => {
           <div className="card">
             <div className="card-body">
               <h3 className="card-title text-center mb-4">Payment Details</h3>
-              {error && (
-                <div className="alert alert-danger" role="alert">
-                  {error}
-                </div>
-              )}
+              {error && <div className="alert alert-danger">{error}</div>}
               {step === 'processing' ? renderProcessingStep() : renderPaymentForm()}
             </div>
           </div>
@@ -222,4 +169,4 @@ const PaymentForm = ({ eventId, attendeeId, ticketPrice }) => {
   );
 };
 
-export default PaymentForm;
+export default PaymentForm; 

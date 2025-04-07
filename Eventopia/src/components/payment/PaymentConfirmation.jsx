@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -7,7 +7,20 @@ const PaymentConfirmation = () => {
   const navigate = useNavigate();
   const paymentDetails = location.state || {};
 
+  useEffect(() => {
+    // Save ticket data to localStorage (optional)
+    const ticketData = {
+      name: "Khujista",
+      eventName: paymentDetails.eventName,
+      eventTime: paymentDetails.eventTime
+    };
+    localStorage.setItem('ticket', JSON.stringify(ticketData));
+  }, [paymentDetails]);
+
+
+
   const handleViewTicket = () => {
+
     navigate('/view-tickets', {
       state: {
         paymentId: paymentDetails.paymentId,
@@ -18,7 +31,7 @@ const PaymentConfirmation = () => {
         type: paymentDetails.type
       }
     });
-  };
+
 
   const handleBackToEvents = () => {
     navigate('/');
@@ -28,37 +41,17 @@ const PaymentConfirmation = () => {
     <div className="container mt-5">
       <div className="row justify-content-center">
         <div className="col-md-6">
-          <div className="card">
-            <div className="card-body text-center">
-              <div className="mb-4">
-                <i className="bi bi-check-circle-fill text-success" style={{ fontSize: '4rem' }}></i>
-              </div>
-              <h2 className="card-title mb-4">Payment Successful!</h2>
-              <div className="payment-details mb-4">
-                <p className="mb-2">
-                  <strong>Payment ID:</strong> {paymentDetails.paymentId}
-                </p>
-                <p className="mb-2">
-                  <strong>Amount Paid:</strong> ${paymentDetails.amount}
-                </p>
-                <p className="mb-2">
-                  <strong>Status:</strong>{' '}
-                  <span className="badge bg-success">Completed</span>
-                </p>
-              </div>
-              <div className="d-grid gap-2">
-                <button
-                  className="btn btn-primary"
-                  onClick={handleViewTicket}
-                >
-                  View Ticket
-                </button>
-                <button
-                  className="btn btn-outline-primary"
-                  onClick={handleBackToEvents}
-                >
-                  Back to Events
-                </button>
+          <div className="card text-center">
+            <div className="card-body">
+              <i className="bi bi-check-circle-fill text-success mb-3" style={{ fontSize: '3rem' }}></i>
+              <h2>Payment Successful!</h2>
+              <p><strong>Payment ID:</strong> {paymentDetails.paymentId}</p>
+              <p><strong>Amount Paid:</strong> ${paymentDetails.amount}</p>
+              <p><strong>Status:</strong> <span className="badge bg-success">Completed</span></p>
+
+              <div className="d-grid gap-2 mt-4">
+                <button className="btn btn-primary" onClick={handleViewTicket}>View Ticket</button>
+                <button className="btn btn-outline-primary" onClick={handleBackToEvents}>Back to Events</button>
               </div>
             </div>
           </div>

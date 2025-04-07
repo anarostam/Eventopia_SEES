@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../Css-folder/index.css"; // adjust path as needed
 import { loginUser } from "./LoginBack";
+import { Link } from "react-router-dom";
+
 
 const Login = ({ setUser }) => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -55,7 +57,8 @@ const Login = ({ setUser }) => {
           {error && <p style={{ color: "red" }}>{error}</p>}
         </form>
 
-        <p>Don't have an account? <a href="/register">Sign up</a></p>
+        {/* <p>Don't have an account? <a href="/register">Sign up</a></p> */}
+        Don't have an account? <Link to="/register">Sign up</Link>
       </div>
     </div>
   );

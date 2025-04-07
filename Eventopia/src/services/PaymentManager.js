@@ -38,21 +38,31 @@ class PaymentManager {
     return PaymentManager.instance;
   }
 
-  // ✅ logPayment now returns Supabase-generated ID
-  async logPayment(eventId, attendeeId, amount, status) {
+  // async logPayment(eventId, attendeeId, amount, status) {
+
+  async logPayment(eventId, attendeeId, amount, status, paymentID) {
+
     try {
       const { data, error } = await supabase
         .from("payments")
         .insert([
           {
-            eventID: eventId,
-            attendeeID: attendeeId,
+            event_id: eventId,
+            attendee_id: attendeeId,
             amount: amount,
             status: status,
-          },
-        ])
-        .select() // ✅ needed to return inserted row
-        .single();
+
+        //   },
+        // ])
+        // .select() // ✅ needed to return inserted row
+        // .single();
+
+
+            paymentID: paymentID // ✅ this should now get saved
+          }
+        ]);
+  
+      console.log("Supabase insert response: ", data, error);
 
       if (error) {
         console.error("Error logging payment to Supabase:", error);
@@ -87,6 +97,11 @@ class PaymentManager {
 
       // 2. Generate ticket
       const ticketId = await this.generateTicket(paymentData, registrationId);
+           
+      // log payment
+     // await this.logPayment(paymentData.eventId, paymentData.attendeeId, paymentData.amount, true);
+     await this.logPayment(paymentData.eventId, paymentData.attendeeId, paymentData.amount, true, transactionId);
+
 
       // 3. Log payment to Supabase and grab real payment ID
       const { data: paymentRow, error } = await this.logPayment(
