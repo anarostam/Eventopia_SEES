@@ -238,6 +238,7 @@ const Profile = () => {
            <Link to="/ViewEvent"><button className="btn btn-primary">Browse Events</button></Link>
            <Link to="/ViewVenue"><button className="btn btn-primary">Browse Venues</button></Link>
            <Link to="/AddPoll"><button className="btn btn-primary">Create poll</button></Link>
+           <Link to="/AllPolls"><button className="btn btn-primary">Check polls</button></Link>
           </>
         )}
       </div>

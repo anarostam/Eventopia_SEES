@@ -1,4 +1,4 @@
-const { supabase } = require('../../Client'); // your Supabase client instance
+const { supabase } = require('../../Client');
 
 class PollService {
   async createPoll(speaker_id, question, options) {
@@ -25,29 +25,29 @@ class PollService {
   }
 
   async submitVote(user_id, poll_id, option_id) {
-// Check if the user has already voted in this poll
     const { data: existingVote, error: checkError } = await supabase
       .from('poll_responses')
       .select('*')
       .eq('poll_id', poll_id)
       .eq('respondent', user_id)
       .maybeSingle();
-
+  
     if (checkError) throw checkError;
     if (existingVote) {
       throw new Error('User has already voted in this poll.');
     }
-
+  
     const { error: insertError } = await supabase
       .from('poll_responses')
-      .insert([{ user_id, poll_id, option_id }]);
-
+      .insert([{ respondent: user_id, poll_id, option_id }]);
+  
     if (insertError) throw insertError;
-
+  
     return { message: 'Vote submitted successfully' };
   }
+  
 
-  async viewPoll(poll_id) {
+  async viewActivePoll() {
     const { data: poll, error } = await supabase
       .from('polls')
       .select(`
@@ -58,12 +58,32 @@ class PollService {
           option
         )
       `)
-      .eq('id', poll_id)
+      .eq('status', 'active')
+      .order('created_at', { ascending: false }) // In case multiple, get latest
+      .limit(1)
       .single();
-
+  
     if (error) throw error;
     return poll;
   }
+  
+  async getAllPolls() {
+    const { data, error } = await supabase
+      .from('polls')
+      .select(`
+        id,
+        question,
+        poll_options (
+          id,
+          option
+        )
+      `)
+      .order('created_at', { ascending: false });
+  
+    if (error) throw error;
+    return data;
+  }
+  
 
   async getPollResults(poll_id) {
     const { data, error } = await supabase
@@ -75,5 +95,7 @@ class PollService {
     return data;
   } 
 }
+
+
 
 module.exports = new PollService();
