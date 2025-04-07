@@ -47,6 +47,24 @@ class PollService {
     return { message: 'Vote submitted successfully' };
   }
 
+  async viewPoll(poll_id) {
+    const { data: poll, error } = await supabase
+      .from('polls')
+      .select(`
+        id,
+        question,
+        poll_options (
+          id,
+          option
+        )
+      `)
+      .eq('id', poll_id)
+      .single();
+
+    if (error) throw error;
+    return poll;
+  }
+
   async getPollResults(poll_id) {
     const { data, error } = await supabase
       .from('poll_options')
