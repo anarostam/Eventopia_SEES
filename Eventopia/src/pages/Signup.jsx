@@ -30,7 +30,8 @@ import { supabase } from "../Client";
             admin: 1,
             attendee: 2,
             organizer: 3,
-            stakeholder: 4
+            stakeholder: 4,
+            speaker: 5
         };
         try{
             const roleNumber = roleMapping[formData.role] || 0;

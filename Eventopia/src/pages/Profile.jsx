@@ -174,6 +174,7 @@ const Profile = () => {
     2: "Attendee",
     3: "Organizer",
     4: "Stakeholder",
+    5: "Speaker"
   };
 
   return (
@@ -187,9 +188,8 @@ const Profile = () => {
             <div className="section">
                {/* Event Section */}
               <div className="Event">
-                <h2>Events</h2>
-                <br></br>
-                <br></br>
+                {/* <h2>Events</h2> */}
+          
                 <Link to="/AddEvent">
                   <button className="btn btn-primary">Add Event</button>
                 </Link>
@@ -199,12 +199,15 @@ const Profile = () => {
                 <Link to="/ViewEvent">
                   <button className="btn btn-secondary">View Event</button>
                 </Link>
+                {/* <Link to="/Register">
+                  <button className="btn btn-secondary">Sign Up </button>
+                </Link> */}
               </div>
               <br />
 
               {/* Venue Section */}
               <div className="Venue">
-                <h2>Venues</h2>
+                {/* <h2>Venues</h2> */}
                 <Link to="/AddVenue">
                   <button className="btn btn-primary">Add Venue</button>
                 </Link>
@@ -224,12 +227,19 @@ const Profile = () => {
           <>
             <Link to="/ViewEvent"><button className="btn btn-primary">Browse Events</button></Link>
             <Link to="/ViewVenue"><button className="btn btn-primary">Browse Venues</button></Link>
-            <Link to="/MyEvents"><button className="btn btn-primary">My Events</button></Link>
+            <Link to="/ViewPoll"><button className="btn btn-primary">View Poll</button></Link>
           </>
         )}
 
         {user.role === 3 && <p>Organizer-specific controls coming soon...</p>}
         {user.role === 4 && <p>Stakeholder view coming soon...</p>}
+        {user.role === 5 && (
+          <>
+           <Link to="/ViewEvent"><button className="btn btn-primary">Browse Events</button></Link>
+           <Link to="/ViewVenue"><button className="btn btn-primary">Browse Venues</button></Link>
+           <Link to="/AddPoll"><button className="btn btn-primary">Create poll</button></Link>
+          </>
+        )}
       </div>
     </div>
   );
