@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PaymentManager from '../../services/PaymentManager';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { registerForEvent } from '../../pages/EventRegistration';
 import { supabase } from '../../Client';
+
 const PaymentForm = ({ eventId, attendeeId, ticketPrice }) => {
   const navigate = useNavigate();
   const paymentManager = PaymentManager.getInstance();
@@ -12,7 +13,7 @@ const PaymentForm = ({ eventId, attendeeId, ticketPrice }) => {
     amount: ticketPrice || 0,
     status: paymentManager.PAYMENT_STATUSES.PENDING,
     eventId: parseInt(eventId) || 0,
-    attendeeId: parseInt(attendeeId) || 0,
+    attendeeId: 0,
     type: paymentManager.PAYMENT_TYPES.REGULAR
   });
 
@@ -32,6 +33,27 @@ const PaymentForm = ({ eventId, attendeeId, ticketPrice }) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+
+    const { data: userData, error: userError } = await supabase  // query user table to get the logged in user's id
+      .from('user')
+      .select('*')
+      .eq('email', storedUser.email)
+      .single();
+
+    if (userError || !userData) {
+      console.error("Could not fetch user from users table:", userError);
+      return;
+    }
+
+    setPaymentData(prev => ({
+      ...prev,
+      attendeeId: userData.id,
+    }));  // set the attendee ID to the logged in user's id instead of the default value which was previously forced, 1
+
+    console.log("Attendee ID", attendeeId);
+    console.log("User ID: ", userData.id);
 
     // Validate payment data
     const validation = paymentManager.validatePaymentData(paymentData);
@@ -53,7 +75,7 @@ const PaymentForm = ({ eventId, attendeeId, ticketPrice }) => {
       }
 
       // Register for the event after payment is successful
-      const registrationResult = await registerForEvent(attendeeId, eventId);
+      const registrationResult = await registerForEvent(userData.id, eventId);
       if (!registrationResult.success) {
         throw new Error(registrationResult.message || 'Event registration failed.');
       }
@@ -62,9 +84,6 @@ const PaymentForm = ({ eventId, attendeeId, ticketPrice }) => {
       if (!ticketDetails) {
         throw new Error('Failed to generate ticket');
       }
-
-      
-
 
       setStep('complete');
       
