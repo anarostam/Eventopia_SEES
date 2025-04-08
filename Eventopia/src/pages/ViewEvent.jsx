@@ -1,9 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
-import '../Css-folder/ViewEvent.css';
-//import { useNavigate } from 'react-router-dom';
 import '../Css-folder/ViewEvent.css';
 
 // Initialize Supabase client
@@ -17,33 +14,47 @@ const ViewEvent = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  //const navigate = useNavigate();
 
-  // Fetch event data from Supabase
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const { data, error } = await supabase
+        const { data: eventsData, error: eventError } = await supabase
           .from('event')
           .select('*')
           .order('date', { ascending: true });
 
-        if (error) throw error;
+        if (eventError) throw eventError;
 
-        setEvents(data);
+        // Fetch all venues
+        const { data: venuesData, error: venueError } = await supabase
+          .from('venues')
+          .select('venue_name, capacity');
+
+        if (venueError) throw venueError;
+
+        // Merge capacity into event based on venue name
+        const eventsWithCapacity = eventsData.map(event => {
+          const matchingVenue = venuesData.find(
+            venue => venue.venue_name === event.venue
+          );
+          return {
+            ...event,
+            capacity: matchingVenue ? matchingVenue.capacity : 'N/A',
+          };
+        });
+
+        setEvents(eventsWithCapacity);
       } catch (error) {
         setError('Failed to fetch events. Please try again later.');
         console.error(error);
       } finally {
         setLoading(false);
       }
-      setLoading(false);
     };
 
     fetchEvents();
   }, []);
 
-  // Handle registration and redirect to payment page
   const handleRegister = (event) => {
     const userId = localStorage.getItem('userId') || '1'; // Default for testing
     navigate('/payment', {
@@ -95,6 +106,9 @@ const ViewEvent = () => {
                   <p className="card-text"><strong>Date:</strong> {event.date}</p>
                   <p className="card-text"><strong>Time:</strong> {event.time}</p>
                   <p className="card-text"><strong>Venue:</strong> {event.venue}</p>
+                  <p className="card-text">
+                    <strong>Capacity:</strong> {event.registered ?? 0}/{event.capacity}
+                  </p>
 
                   <div className="d-flex justify-content-between align-items-center mt-auto">
                     <span className="h5 mb-0">${event.price || 'Free'}</span>

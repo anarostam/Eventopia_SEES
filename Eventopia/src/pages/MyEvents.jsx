@@ -1,69 +1,100 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '../Client';
 import '../Css-folder/ViewEvent.css';
-
-// Initialize Supabase client
-const supabase = createClient(
-  'https://fkbflmyfughlgxnzuazy.supabase.co',
-  'your-supabase-key'
-);
 
 const MyEvent = () => {
   const navigate = useNavigate();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [userId, setUserId] = useState(null);
 
-  const [user, setUser] = useState(null);
-  const [userId, setUserId] = useState(null); // Set userId state
-  
   useEffect(() => {
-    // Fetch the logged-in user data from Supabase
-    const fetchUserData = async () => {
-      const { data: sessionData, error: sessionError } = await supabase.auth.getUser();
-      if (sessionError || !sessionData.user) {
+    const fetchUserId = async () => {
+      const {
+        data: { user },
+        error: authError
+      } = await supabase.auth.getUser();
+
+      if (authError || !user?.email) {
+        console.error('Supabase Auth error:', authError?.message);
+        setError('Not logged in. Please log in first.');
         navigate('/login');
         return;
       }
 
-      const storedUser = JSON.parse(localStorage.getItem("user"));
-      if (!storedUser) {
-        navigate('/login');
+      const { data, error } = await supabase
+        .from('user')
+        .select('id')
+        .eq('email', user.email)
+        .single();
+
+      if (error || !data) {
+        console.error('User table fetch error:', error?.message);
+        setError('Could not find user in database.');
         return;
       }
 
-      setUser({ ...storedUser, email: sessionData.user.email });
-      setUserId(sessionData.user.id); // Set userId from session
+      setUserId(data.id);
     };
 
-    fetchUserData();
+    fetchUserId();
   }, [navigate]);
 
   useEffect(() => {
-    // If no userId is set, we shouldn't try to fetch events
-    if (!userId) {
-      setError('User not logged in');
-      setLoading(false);
-      return;
-    }
+    if (!userId) return;
 
-    // Fetch events the user is registered for by joining the event_register and event tables
     const fetchUserEvents = async () => {
       try {
-        const { data, error } = await supabase
+        // Fetch events this user is registered for
+        const { data: registeredEvents, error: regError } = await supabase
           .from('event_register')
-          .select('event_id, event(name, description, date, time, venue, price, picture_url)')
-          .eq('attendeeid', userId);
+          .select('eventid, event(id, name, description, date, time, venue, price, picture_url)')
+          .eq('userid', userId);
 
-        if (error) throw error;
+        if (regError) throw regError;
 
-        const userEvents = data.map((registration) => registration.event);
+        const eventsOnly = registeredEvents.map(r => r.event);
+        const eventIds = eventsOnly.map(e => e.id);
+        const venueNames = [...new Set(eventsOnly.map(e => e.venue))];
 
-        setEvents(userEvents);
-      } catch (error) {
-        setError('Failed to fetch events. Please try again later.');
-        console.error(error);
+        // Fetch venue capacities
+        const { data: venues, error: venueError } = await supabase
+          .from('venues')
+          .select('venue_name, capacity')
+          .in('venue_name', venueNames);
+
+        if (venueError) throw venueError;
+
+        // Fetch all registrations to count attendees per event
+        const { data: allRegistrations, error: countError } = await supabase
+          .from('event_register')
+          .select('eventid');
+
+        if (countError) throw countError;
+
+        // Count how many registered per event
+        const registrationCounts = eventIds.map(eventId => {
+          const count = allRegistrations.filter(r => r.eventid === eventId).length;
+          return { eventId, count };
+        });
+
+        // Merge capacity and registration count into event
+        const eventsWithDetails = eventsOnly.map(event => {
+          const venue = venues.find(v => v.venue_name === event.venue);
+          const regCount = registrationCounts.find(rc => rc.eventId === event.id)?.count || 0;
+          return {
+            ...event,
+            capacity: venue ? venue.capacity : 'N/A',
+            registered: regCount
+          };
+        });
+
+        setEvents(eventsWithDetails);
+      } catch (err) {
+        console.error('Event fetch error:', err);
+        setError('Could not load your events.');
       } finally {
         setLoading(false);
       }
@@ -72,25 +103,10 @@ const MyEvent = () => {
     fetchUserEvents();
   }, [userId]);
 
-  // Handle registration and redirect to payment page
-  const handleRegister = (event) => {
-    navigate('/payment', {
-      state: {
-        eventId: event.id,
-        attendeeId: userId, // Use the userId from the session
-        ticketPrice: event.price || 0,
-        eventName: event.name,
-      }
-    });
-  };
-
-  // If user is not logged in or events fail to load, show error
   if (error) {
     return (
       <div className="container mt-5">
-        <div className="alert alert-danger" role="alert">
-          {error}
-        </div>
+        <div className="alert alert-danger">{error}</div>
       </div>
     );
   }
@@ -98,7 +114,6 @@ const MyEvent = () => {
   return (
     <div className="container mt-5">
       <h1 className="text-center mb-4">Your Registered Events</h1>
-
       <div className="row">
         {loading ? (
           <div className="col-12 text-center">
@@ -124,16 +139,10 @@ const MyEvent = () => {
                   <p className="card-text"><strong>Date:</strong> {event.date}</p>
                   <p className="card-text"><strong>Time:</strong> {event.time}</p>
                   <p className="card-text"><strong>Venue:</strong> {event.venue}</p>
-
-                  <div className="d-flex justify-content-between align-items-center mt-auto">
-                    <span className="h5 mb-0">${event.price || 'Free'}</span>
-                    <button
-                      className="btn btn-primary"
-                      onClick={() => handleRegister(event)}
-                    >
-                      Register Now
-                    </button>
-                  </div>
+                  <p className="card-text">
+                    <strong>Registered:</strong> {event.registered} / {event.capacity}
+                  </p>
+                  <span className="h5 mt-auto">${event.price || 'Free'}</span>
                 </div>
               </div>
             </div>
