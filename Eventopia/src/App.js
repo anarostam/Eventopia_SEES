@@ -20,6 +20,10 @@ import EditEvent from './pages/Event/EditEvent';
 import ManageVenue from './pages/Venue/ManageVenue';
 import EditVenue from './pages/Venue/EditVenue';
 import MyEvents from './pages/Event/MyEvents';
+import AddPoll from './pages/poll/AddPoll';
+import PollConfirmation from './pages/confirmation/PollConfirmation';
+import ViewPoll from './pages/poll/ViewPoll';
+import AllPolls from './pages/poll/AllPolls';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -52,6 +56,10 @@ function App() {
         <Route path="/manageVenue" element={<ManageVenue />} />
         <Route path="/editVenue" element={<EditVenue />} />
         <Route path="/myEvents" element={<MyEvents />} />
+        <Route path="/addPoll" element={<AddPoll />} />
+        <Route path="/pollConfirmation" element={<PollConfirmation />} />
+        <Route path="/viewPoll" element={<ViewPoll />} />
+        <Route path="/allPolls" element={<AllPolls />} />
       </Routes>
       <Footer />
     </Router>
