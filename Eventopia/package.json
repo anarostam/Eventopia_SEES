@@ -3,14 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@supabase/supabase-js": "^2.49.1",
+    "@supabase/supabase-js": "^2.49.2",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.8.4",
     "bootstrap": "^5.3.3",
+<<<<<<< HEAD
     "qrcode.react": "^4.2.0",
+=======
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "nodemailer": "^6.10.0",
+>>>>>>> origin/Dev
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.4.0",

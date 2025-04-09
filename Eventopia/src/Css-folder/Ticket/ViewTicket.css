@@ -1,0 +1,150 @@
+.ticket-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.ticket-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.ticket-header h2 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.ticket-id {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.ticket-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 30px;
+}
+
+.ticket-info {
+  flex: 1;
+  padding-right: 30px;
+}
+
+.ticket-info h3 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+.event-description {
+  color: #666;
+  margin-bottom: 20px;
+  font-size: 0.95em;
+}
+
+.info-row {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.label {
+  font-weight: bold;
+  color: #666;
+  width: 120px;
+}
+
+.value {
+  color: #333;
+}
+
+.ticket-qr {
+  background: white;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.ticket-footer {
+  border-top: 2px solid #f0f0f0;
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.attendee-info {
+  flex: 1;
+}
+
+.attendee-info h4 {
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.attendee-info p {
+  margin: 5px 0;
+  color: #666;
+}
+
+.ticket-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  padding: 8px 20px;
+  border-radius: 5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background-color: #3498db;
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #2980b9;
+}
+
+.btn-secondary {
+  background-color: #f8f9fa;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.btn-secondary:hover {
+  background-color: #e9ecef;
+}
+
+@media (max-width: 768px) {
+  .ticket-content {
+    flex-direction: column;
+  }
+
+  .ticket-info {
+    padding-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .ticket-qr {
+    align-self: center;
+  }
+
+  .ticket-footer {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .ticket-actions {
+    width: 100%;
+    justify-content: center;
+  }
+} 

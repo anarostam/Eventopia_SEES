@@ -1,68 +1,59 @@
 import React, { useState, useEffect } from 'react';
+import { createClient } from '@supabase/supabase-js';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'; 
-import '../Css-folder/ViewEvent.css'; 
+import '../../Css-folder/ViewEvent.css';
+import { deleteEvent } from '../backend/AddEventBack';
+const supabase = createClient(
+  'https://fkbflmyfughlgxnzuazy.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZrYmZsbXlmdWdobGd4bnp1YXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkyOTk0MTQsImV4cCI6MjA1NDg3NTQxNH0.GQCJ-XBiyZAD2tVXVwY_RWFaF6dHejPGKW5jy6p0deA'
+);
 
-const ViewEvent = () => {
-  const navigate = useNavigate();
+const ManageEvent = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-  // Fetch event data (replace with actual API endpoint)
   useEffect(() => {
-    setLoading(true);
-    // TODO: Replace with actual API endpoint
-    // Mocking event data for now
-    const mockEvents = [
-      {
-        id: 1,
-        title: 'Tech Conference 2024',
-        description: 'Join us for the biggest tech conference of the year',
-        imageUrl: 'https://via.placeholder.com/150',
-        price: 99.99,
-        date: '2024-06-15',
-        venue: 'Convention Center'
-      },
-      {
-        id: 2,
-        title: 'Web Development Workshop',
-        description: 'Learn the latest web development technologies',
-        imageUrl: 'https://via.placeholder.com/150',
-        price: 49.99,
-        date: '2024-07-01',
-        venue: 'Tech Hub'
-      },
-      {
-        id: 3,
-        title: 'AI Summit',
-        description: 'Explore the future of Artificial Intelligence',
-        imageUrl: 'https://via.placeholder.com/150',
-        price: 149.99,
-        date: '2024-08-20',
-        venue: 'Innovation Center'
-      }
-    ];
+    const fetchEvents = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('event')
+          .select('*')
+          .order('date', { ascending: true });
 
-    // Simulate API call
-    setTimeout(() => {
-      setEvents(mockEvents);
-      setLoading(false);
-    }, 1000);
+        if (error) throw error;
+
+        setEvents(data); 
+      } catch (error) {
+        setError('Failed to fetch events. Please try again later.');
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
   }, []);
 
-  const handleRegister = (event) => {
-    // Get user ID from localStorage or context
-    const userId = localStorage.getItem('userId') || '1'; // Default for testing
+  
+  const handleEdit = (event) => {
+    navigate('/EditEvent', { state: { event } });
+  };
 
-    // Navigate to payment page with event details
-    navigate('/payment', {
-      state: {
-        eventId: event.id,
-        attendeeId: parseInt(userId),
-        ticketPrice: event.price
-      }
-    });
+  
+  const handleDelete = async (eventId) => {
+    const { error } = await supabase
+      .from('event')
+      .delete()
+      .eq('id', eventId);
+
+    if (error) {
+      setError('Failed to delete the event. Please try again later.');
+    } else {
+      
+      setEvents(events.filter((event) => event.id !== eventId));
+    }
   };
 
   if (error) {
@@ -77,8 +68,8 @@ const ViewEvent = () => {
 
   return (
     <div className="container mt-5">
-      <h1 className="text-center mb-4">Upcoming Events</h1>
-      
+      <h1 className="text-center mb-4">Manage Events</h1>
+
       <div className="row">
         {loading ? (
           <div className="col-12 text-center">
@@ -90,14 +81,14 @@ const ViewEvent = () => {
           events.map((event) => (
             <div key={event.id} className="col-md-4 mb-4">
               <div className="card h-100">
-                <img 
-                  src={event.imageUrl} 
-                  className="card-img-top" 
-                  alt={event.title}
+                <img
+                  src={event.picture_url || 'https://via.placeholder.com/300x200'}
+                  className="card-img-top"
+                  alt={event.name}
                   style={{ height: '200px', objectFit: 'cover' }}
                 />
                 <div className="card-body d-flex flex-column">
-                  <h5 className="card-title">{event.title}</h5>
+                  <h5 className="card-title">{event.name}</h5>
                   <p className="card-text">{event.description}</p>
                   <div className="mt-auto">
                     <p className="card-text">
@@ -114,9 +105,15 @@ const ViewEvent = () => {
                       <span className="h5 mb-0">${event.price}</span>
                       <button
                         className="btn btn-primary"
-                        onClick={() => handleRegister(event)}
+                        onClick={() => handleEdit(event)}
                       >
-                        Register Now
+                        Edit Event
+                      </button>
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => deleteEvent(event.id)}
+                      >
+                        Delete Event
                       </button>
                     </div>
                   </div>
@@ -130,4 +127,4 @@ const ViewEvent = () => {
   );
 };
 
-export default ViewEvent;
+export default ManageEvent;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
-import '../Css-folder/ViewTicket.css';
+import '../../Css-folder/Ticket/ViewTicket.css';
 
 const ViewTicket = () => {
   const location = useLocation();

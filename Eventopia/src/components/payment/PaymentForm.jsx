@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PaymentManager from '../../services/PaymentManager';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import { registerForEvent } from '../../pages/backend/EventRegistration';
+import { supabase } from '../../Client';
 const PaymentForm = ({ eventId, attendeeId, ticketPrice }) => {
   const navigate = useNavigate();
   const paymentManager = PaymentManager.getInstance();
@@ -51,11 +52,19 @@ const PaymentForm = ({ eventId, attendeeId, ticketPrice }) => {
         throw new Error('Registration failed to confirm');
       }
 
+      // Register for the event after payment is successful
+      const registrationResult = await registerForEvent(attendeeId, eventId);
+      if (!registrationResult.success) {
+        throw new Error(registrationResult.message || 'Event registration failed.');
+      }
       // Get ticket details
       const ticketDetails = paymentManager.getTicketDetails(result.ticketId);
       if (!ticketDetails) {
         throw new Error('Failed to generate ticket');
       }
+
+      
+
 
       setStep('complete');
       
