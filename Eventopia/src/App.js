@@ -12,6 +12,7 @@ import EventConfirmation from './pages/EventConfirmation';
 import AddVenue from './pages/AddVenue';
 import VenueConfirmation from './pages/VenueConfirmation';
 import ViewEvent from './pages/ViewEvent';
+import ViewTicket from './pages/ViewTicket';
 import Payment from './pages/Payment';
 import PaymentConfirmation from './components/payment/PaymentConfirmation';
 
@@ -38,6 +39,7 @@ function App() {
         <Route path="/addVenue" element={<AddVenue />} />
         <Route path="/venueConfirmation" element={<VenueConfirmation />} />
         <Route path="/ViewEvent" element={<ViewEvent />} />
+        <Route path="/ViewTicket" element={<ViewTicket />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/payment-confirmation" element={<PaymentConfirmation />} />
       </Routes>

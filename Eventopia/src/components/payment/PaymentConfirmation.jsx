@@ -8,8 +8,13 @@ const PaymentConfirmation = () => {
   const paymentDetails = location.state || {};
 
   const handleViewTicket = () => {
-    // TODO: Navigate to ticket view once implemented
-    console.log('View ticket for payment:', paymentDetails.paymentId);
+    navigate('/ViewTicket', {
+      state: {
+        eventId: paymentDetails.eventId,
+        attendeeId: paymentDetails.attendeeId,
+        ticketPrice: paymentDetails.amount
+      }
+    });
   };
 
   const handleBackToEvents = () => {
