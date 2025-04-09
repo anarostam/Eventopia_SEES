@@ -7,6 +7,8 @@ const FeedbackAnalytics = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [averageRating, setAverageRating] = useState(null); // stores the average rating of an event as set by users who reviewed it
+  const [comments, setComments] = useState([]);  // stores an array of user comments made about an event
 
   useEffect(() => {
     fetchEvents();
@@ -71,6 +73,47 @@ const FeedbackAnalytics = () => {
     setSelectedEvent(event);
   };
 
+  // load average score for the selected event, load each time a new event is selected
+
+  useEffect(() => {
+    const computeAverageRating = async() => {
+      if (!selectedEvent) {
+        setAverageRating(null);
+        setComments([]);
+        console.log("No selected event.");
+        return;  // if no event is selected, set rating to null and exit the method
+      }
+
+      console.log("Selected event ID for calculation: ", selectedEvent?.id);
+
+      const { data, error } = await supabase
+        .from("feedback")
+        .select("rating, comment, user_email")
+        .eq("event_id", selectedEvent?.id);  // get all the matching ratings & comments with the user's email for the selected event by matching ids
+
+      if (error) {
+        console.error("Error getting ratings from database: ", error);
+        setAverageRating(null);
+        setComments([]);
+        return;
+      }
+
+      if (data.length === 0) {
+        setAverageRating("No Ratings Yet");
+        setComments([]);
+        return;
+      }
+
+      const total = data.reduce((sum, entry) => sum + entry.rating, 0);
+      const avg = total / data.length;  // get the average rating of the sum of all ratings stored in the database
+
+      setAverageRating(avg.toFixed(2)); // round to 2 d.p.
+      setComments(data.filter(entry => entry.comment && entry.comment.trim() != ""));
+    };
+
+    computeAverageRating();
+  }, [selectedEvent])
+
   if (loading) {
     return (
       <div className="feedback-analytics-container">
@@ -129,8 +172,26 @@ const FeedbackAnalytics = () => {
           
           <div className="feedback-stats">
             <h3>Feedback Statistics</h3>
-            {/* Placeholder for feedback statistics */}
-            <p>Coming soon: Detailed feedback analysis for this event</p>
+            {averageRating === null ? (
+              <p>Loading feedback data...</p>
+            ) : (
+              <p><strong>Event Rating:</strong> {averageRating} / 5</p>
+            )}
+
+            {comments.length > 0 ? (
+              <div className="comments-section">
+                <p><strong>Comments:</strong></p>
+                <ul>
+                  {comments.map((entry, index) => (
+                    <li key={index} className="comment-entry">
+                      <p><strong>{entry.user_email}</strong>: {entry.comment}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <p>No comments available for this event.</p>
+            )}
           </div>
         </div>
       )}
