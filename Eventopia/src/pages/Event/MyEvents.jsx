@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../Client';
-import '../Css-folder/ViewEvent.css';
+import { supabase } from '../../Client';
+import '../../Css-folder/ViewEvent.css';
 
 const MyEvent = () => {
   const navigate = useNavigate();

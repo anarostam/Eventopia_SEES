@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PaymentManager from '../../services/PaymentManager';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { registerForEvent } from '../../pages/EventRegistration';
+import { registerForEvent } from '../../pages/backend/EventRegistration';
 import { supabase } from '../../Client';
 
 const PaymentForm = ({ eventId, attendeeId, ticketPrice }) => {

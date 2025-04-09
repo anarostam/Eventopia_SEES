@@ -1,4 +1,4 @@
-import { supabase } from "../Client";
+import { supabase } from "../../Client";
 
 export const ProfileBackend = {
   async getUserProfile(userEmail) {
