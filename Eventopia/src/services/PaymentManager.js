@@ -99,8 +99,8 @@ class PaymentManager {
       const ticketId = await this.generateTicket(paymentData, registrationId);
            
       // log payment
-     // await this.logPayment(paymentData.eventId, paymentData.attendeeId, paymentData.amount, true);
-     await this.logPayment(paymentData.eventId, paymentData.attendeeId, paymentData.amount, true, transactionId);
+     await this.logPayment(paymentData.eventId, paymentData.attendeeId, paymentData.amount, true);
+     //await this.logPayment(paymentData.eventId, paymentData.attendeeId, paymentData.amount, true, transactionId);
 
 
       // 3. Log payment to Supabase and grab real payment ID

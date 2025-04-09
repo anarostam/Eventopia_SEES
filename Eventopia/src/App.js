@@ -57,7 +57,7 @@ function App() {
         <Route path="/myEvents" element={<MyEvents />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/letschat" element={<LetsChat />} />
-          <Route path = "/viewTicket" element={<ViewTicket/>} /> 
+      
 
       </Routes>
       <Footer />

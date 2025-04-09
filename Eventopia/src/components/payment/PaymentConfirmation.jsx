@@ -60,5 +60,5 @@ const PaymentConfirmation = () => {
     </div>
   );
 };
-
+}
 export default PaymentConfirmation;
