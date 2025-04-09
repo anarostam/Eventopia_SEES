@@ -7,22 +7,25 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
 import Footer from './components/Footer';
-import AddEvent from './pages/AddEvent';
-import EventConfirmation from './pages/EventConfirmation';
-import AddVenue from './pages/AddVenue';
-import VenueConfirmation from './pages/VenueConfirmation';
-import ViewEvent from './pages/ViewEvent';
+import AddEvent from './pages/Event/AddEvent';
+import EventConfirmation from './pages/confirmation/EventConfirmation';
+import AddVenue from './pages/Venue/AddVenue';
+import VenueConfirmation from './pages/confirmation/VenueConfirmation';
+import ViewEvent from './pages/Event/ViewEvent';
 import Payment from './pages/Payment';
 import PaymentConfirmation from './components/payment/PaymentConfirmation';
-import ViewVenue from './pages/ViewVenue';
-import ManageEvent from './pages/ManageEvent';
-import EditEvent from './pages/EditEvent';
-import ManageVenue from './pages/ManageVenue';
-import EditVenue from './pages/EditVenue';
-import MyEvents from './pages/MyEvents';
 import Chat from './components/Chatroom/ChatRoomback';
 import LetsChat from "./pages/LetsChat";
-
+import ViewVenue from './pages/Venue/ViewVenue';
+import ManageEvent from './pages/Event/ManageEvent';
+import EditEvent from './pages/Event/EditEvent';
+import ManageVenue from './pages/Venue/ManageVenue';
+import EditVenue from './pages/Venue/EditVenue';
+import MyEvents from './pages/Event/MyEvents';
+import AddPoll from './pages/poll/AddPoll';
+import PollConfirmation from './pages/confirmation/PollConfirmation';
+import ViewPoll from './pages/poll/ViewPoll';
+import AllPolls from './pages/poll/AllPolls';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -57,7 +60,10 @@ function App() {
         <Route path="/myEvents" element={<MyEvents />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/letschat" element={<LetsChat />} />
-      
+        <Route path="/addPoll" element={<AddPoll />} />
+        <Route path="/pollConfirmation" element={<PollConfirmation />} />
+        <Route path="/viewPoll" element={<ViewPoll />} />
+        <Route path="/allPolls" element={<AllPolls />} />
 
       </Routes>
       <Footer />

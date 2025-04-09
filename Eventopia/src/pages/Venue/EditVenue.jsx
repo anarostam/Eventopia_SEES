@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
-import '../Css-folder/ViewEvent.css';
-import { updateVenue } from './Venueback';
-import { supabase } from '../Client';
+import '../../Css-folder/ViewEvent.css';
+import { updateVenue } from '../backend/Venueback';
+import { supabase } from '../../Client';
+// Initialize Supabase client
+// const supabase = createClient(
+//     'https://fkbflmyfughlgxnzuazy.supabase.co',
+//     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZrYmZsbXlmdWdobGd4bnp1YXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkyOTk0MTQsImV4cCI6MjA1NDg3NTQxNH0.GQCJ-XBiyZAD2tVXVwY_RWFaF6dHejPGKW5jy6p0deA'
+//   );
 
 const EditVenue = () => {
   const { state } = useLocation();

@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { listenForEvents } from "./services/promotion/promotionService.js";
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -14,3 +15,6 @@ root.render(
 );
 
 reportWebVitals();
+
+// Listen for new events in Supabase
+listenForEvents();

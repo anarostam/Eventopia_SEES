@@ -27,7 +27,7 @@
   .s-container{
     max-width: 90%;
     margin: auto;
-    padding: 2em;
+    padding: 7em;
   }
 
 .header{
@@ -70,7 +70,7 @@
     border:1px solid #000;
     text-decoration: none; */
 
-    display: block;  
+    /* display: block;   */
     cursor: pointer;
     border: none;
     background-color: #000 !important; /* Force black background */
@@ -162,4 +162,24 @@ input{
   .profile-image-container:hover .profile-image {
     border-color: #007bff; 
   }
-  
+
+.section{
+  /* border: 1px solid #000; */
+  padding: 2em;
+  /* border check karva mate che */
+}
+
+.Event, .Venue{
+ 
+  padding: 1em;
+  /* border: 1px solid #d10b0b;  */
+  display: flex;
+  gap: 10px; 
+  flex-wrap: wrap
+  /* border check karva mate che */
+}
+
+.Event button, .Venue button {
+  flex: 1;
+  min-width: 100px;
+}

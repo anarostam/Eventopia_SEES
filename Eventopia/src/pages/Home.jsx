@@ -3,6 +3,7 @@ import image1 from '../../src/images/4.png'
 import Eventimage1 from '../../src/images/event1.jpg'
 import Eventimage2 from '../../src/images/event2.webp'
 import Eventimage3 from '../../src/images/event3.png'
+import image3 from '../images/image3.jpg'
 const Home = () => {
   return (
     <div className="s-container">
@@ -45,7 +46,7 @@ const Home = () => {
             </div>
           </div>
           <div className="col-md-4 order-md-2">
-            <img src={image1} className="img-fluid rounded-end" alt="Description" />
+            <img src={image3} className="img-fluid rounded-end" alt="Description" />
           </div>
         </div>
       </div>

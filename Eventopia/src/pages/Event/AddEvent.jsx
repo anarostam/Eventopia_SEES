@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../Css-folder/AddEvent.css';
-import { AddEventBack} from "./AddEventBack";
-import { supabase } from "../Client";
+import '../../Css-folder/AddEvent.css';
+import { AddEventBack} from "../backend/AddEventBack";
+import { supabase } from "../../Client";
 
 const AddEvent = () => {
   const [eventName, setEventName] = useState('');
