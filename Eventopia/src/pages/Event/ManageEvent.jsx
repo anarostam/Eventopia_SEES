@@ -3,6 +3,8 @@ import { createClient } from '@supabase/supabase-js';
 import { useNavigate } from 'react-router-dom';
 import '../../Css-folder/ViewEvent.css';
 import { deleteEvent } from '../backend/AddEventBack';
+import { submitFeedback, getFeedback } from '../backend/FeedbackService';
+
 const supabase = createClient(
   'https://fkbflmyfughlgxnzuazy.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZrYmZsbXlmdWdobGd4bnp1YXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkyOTk0MTQsImV4cCI6MjA1NDg3NTQxNH0.GQCJ-XBiyZAD2tVXVwY_RWFaF6dHejPGKW5jy6p0deA'
@@ -12,6 +14,7 @@ const ManageEvent = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [feedbackData, setFeedbackData] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,7 +27,18 @@ const ManageEvent = () => {
 
         if (error) throw error;
 
-        setEvents(data); 
+        setEvents(data);
+        
+        // Fetch feedback for each event
+        for (const event of data) {
+          const feedback = await getFeedback(event.id);
+          if (feedback.success) {
+            setFeedbackData(prev => ({
+              ...prev,
+              [event.id]: feedback
+            }));
+          }
+        }
       } catch (error) {
         setError('Failed to fetch events. Please try again later.');
         console.error(error);
@@ -36,12 +50,10 @@ const ManageEvent = () => {
     fetchEvents();
   }, []);
 
-  
   const handleEdit = (event) => {
     navigate('/EditEvent', { state: { event } });
   };
 
-  
   const handleDelete = async (eventId) => {
     const { error } = await supabase
       .from('event')
@@ -51,9 +63,50 @@ const ManageEvent = () => {
     if (error) {
       setError('Failed to delete the event. Please try again later.');
     } else {
-      
       setEvents(events.filter((event) => event.id !== eventId));
     }
+  };
+
+  const handleFeedback = async (eventId, rating) => {
+    const result = await submitFeedback(eventId, rating);
+    if (result.success) {
+      // Refresh feedback for this event
+      const feedback = await getFeedback(eventId);
+      if (feedback.success) {
+        setFeedbackData(prev => ({
+          ...prev,
+          [eventId]: feedback
+        }));
+      }
+    } else {
+      setError(result.message);
+    }
+  };
+
+  const StarRating = ({ eventId }) => {
+    const [hoveredRating, setHoveredRating] = useState(0);
+    
+    return (
+      <div className="star-rating">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <span
+            key={star}
+            className={`star ${hoveredRating >= star ? 'hovered' : ''} 
+              ${feedbackData[eventId]?.average >= star ? 'filled' : ''}`}
+            onClick={() => handleFeedback(eventId, star)}
+            onMouseEnter={() => setHoveredRating(star)}
+            onMouseLeave={() => setHoveredRating(0)}
+          >
+            ★
+          </span>
+        ))}
+        {feedbackData[eventId]?.count > 0 && (
+          <span className="rating-count">
+            ({feedbackData[eventId].average} / 5 from {feedbackData[eventId].count} reviews)
+          </span>
+        )}
+      </div>
+    );
   };
 
   if (error) {
@@ -101,6 +154,10 @@ const ManageEvent = () => {
                         <i className="bi bi-geo-alt"></i> {event.venue}
                       </small>
                     </p>
+                    <div className="feedback-section mb-3">
+                      <h6>Event Rating:</h6>
+                      <StarRating eventId={event.id} />
+                    </div>
                     <div className="d-flex justify-content-between align-items-center">
                       <span className="h5 mb-0">${event.price}</span>
                       <button
