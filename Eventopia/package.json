@@ -26,7 +26,10 @@
     "react-scripts": "5.0.1",
     "socket.io-client": "^4.8.1",
     "supabase": "^2.19.7",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+
+    "react-chartjs-2": "^5.2.0",
+    "chart.js": "^4.3.0"
   },
   "scripts": {
     "start": "react-scripts start",
