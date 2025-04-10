@@ -27,6 +27,7 @@ import PollConfirmation from './pages/confirmation/PollConfirmation';
 import ViewPoll from './pages/poll/ViewPoll';
 import AllPolls from './pages/poll/AllPolls';
 import FeedbackAnalytics from './pages/FeedbackAnalytics';
+import Analytics from './pages/Analytics';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -66,6 +67,7 @@ function App() {
         <Route path="/viewPoll" element={<ViewPoll />} />
         <Route path="/allPolls" element={<AllPolls />} />
         <Route path="/feedback-analytics" element={<FeedbackAnalytics />} />
+        <Route path="/registration-analytics" element={<Analytics />} />
       </Routes>
       <Footer />
     </Router>

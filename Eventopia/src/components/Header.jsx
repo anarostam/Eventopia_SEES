@@ -111,6 +111,9 @@ const Header = () => {
             {userRole === 4 && ( // 4 represents stakeholder role
               <Link to="/feedback-analytics" className="header--link">Feedback Analytics</Link>
             )}
+            {userRole === 4 && (
+              <Link to="/registration-analytics" className="header--link">Registration Analytics</Link>
+            )}
             <button onClick={logoutClick} className="btn">Log Out</button>
 
             <label htmlFor="headerImageUpload">
