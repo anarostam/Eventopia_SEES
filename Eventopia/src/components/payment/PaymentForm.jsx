@@ -44,15 +44,21 @@ const PaymentForm = ({ eventId, attendeeId, ticketPrice }) => {
       return;
     }
 
-    setPaymentData(prev => ({
-      ...prev,
-      attendeeId: userData.id,
-    }));  // set the attendee ID to the logged in user's id instead of the default value which was previously forced, 1
-
-    console.log("Attendee ID", attendeeId);
+    paymentData.attendeeId = userData.id;
+    attendeeId = userData.id;
+    
+    console.log("Attendee ID: ", attendeeId);
+    console.log("Attendee ID from Payment Data: ", paymentData.attendeeId);
     console.log("User ID: ", userData.id);
 
-    const validation = paymentManager.validatePaymentData(paymentData);
+    const validation = paymentManager.validatePaymentData({
+      amount: ticketPrice || 0,
+      status: paymentManager.PAYMENT_STATUSES.PENDING,
+      eventId: parseInt(eventId) || 0,
+      attendeeId: parseInt(attendeeId),
+      type: paymentManager.PAYMENT_TYPES.REGULAR
+    });
+    
     if (!validation.isValid) {
       setError(validation.errors.join(', '));
       setLoading(false);
@@ -61,7 +67,13 @@ const PaymentForm = ({ eventId, attendeeId, ticketPrice }) => {
 
     try {
       setStep('processing');
-      const result = await paymentManager.processPayment(paymentData);
+      const result = await paymentManager.processPayment({
+        amount: ticketPrice || 0,
+        status: paymentManager.PAYMENT_STATUSES.PENDING,
+        eventId: parseInt(eventId) || 0,
+        attendeeId: parseInt(attendeeId),
+        type: paymentManager.PAYMENT_TYPES.REGULAR
+      });
 
       const registrationStatus = paymentManager.getRegistrationStatus(result.registrationId);
       if (registrationStatus !== paymentManager.REGISTRATION_STATUSES.CONFIRMED) {

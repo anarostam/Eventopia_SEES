@@ -40,27 +40,18 @@ class PaymentManager {
 
   // async logPayment(eventId, attendeeId, amount, status) {
 
-  async logPayment(eventId, attendeeId, amount, status, paymentID) {
+  async logPayment(eventId, attendeeId, amount, status) {
 
     try {
       const { data, error } = await supabase
-        .from("payments")
-        .insert([
-          {
-            event_id: eventId,
-            attendee_id: attendeeId,
-            amount: amount,
-            status: status,
-
-        //   },
-        // ])
-        // .select() // ✅ needed to return inserted row
-        // .single();
-
-
-            paymentID: paymentID // ✅ this should now get saved
-          }
-        ]);
+      .from('payments')
+      .insert([{
+        eventID: eventId,
+        attendeeID: attendeeId,
+        amount: amount,
+        status: status
+      }])
+      .select(); // return newly created row
   
       console.log("Supabase insert response: ", data, error);
 
@@ -99,8 +90,8 @@ class PaymentManager {
       const ticketId = await this.generateTicket(paymentData, registrationId);
            
       // log payment
-     await this.logPayment(paymentData.eventId, paymentData.attendeeId, paymentData.amount, true);
-     //await this.logPayment(paymentData.eventId, paymentData.attendeeId, paymentData.amount, true, transactionId);
+      //this.logPayment(paymentData.eventId, paymentData.attendeeId, paymentData.amount, true);
+      //await this.logPayment(paymentData.eventId, paymentData.attendeeId, paymentData.amount, true, transactionId);
 
 
       // 3. Log payment to Supabase and grab real payment ID
@@ -111,7 +102,12 @@ class PaymentManager {
         true
       );
 
-      if (error || !paymentRow?.id) {
+      console.log("Payment ID: ", paymentRow[0].id);
+      console.log("Payment: ", paymentRow);
+
+      if (error || !paymentRow[0].id) {
+        console.log("Cannot read properties of null (reading 'paymentRow.id')")
+        console.log("Logging error: ", error);
         throw new Error("Payment logging failed.");
       }
 
@@ -123,7 +119,7 @@ class PaymentManager {
 
       // 5. Return values for confirmation/ticket page
       return {
-        paymentId: paymentRow.id, // ✅ using Supabase-generated ID
+        paymentId: paymentRow[0].id, // ✅ using Supabase-generated ID
         registrationId,
         ticketId,
         ...paymentData,

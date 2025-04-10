@@ -1,26 +1,64 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import '../Css-folder/ViewTicket.css';
+import { supabase } from '../Client';
 
 const ViewTicket = () => {
     const [ticket, setTicket] = useState(null);
     const navigate = useNavigate();
+    const location = useLocation();
+    const [username, setUsername] = useState(null);
+    const [eventInfo, setEventInfo] = useState(null);
 
-    // Fetch the ticket details from localStorage (or API)
     useEffect(() => {
-        const storedTicket = JSON.parse(localStorage.getItem('ticket'));
-        if (!storedTicket) {
-            // Redirect to profile page if no ticket is found
-            navigate('/profile');
-        } else {
-            setTicket(storedTicket);
-        }
-    }, [navigate]);
+        const getTicketData = async() => {
+            const { state } = location;
 
-    if (!ticket) {
+            if (!state) {
+                console.error("Missing ticket data from location.state");
+                return;
+            }
+
+            const storedUser = JSON.parse(localStorage.getItem("user"));
+
+            const { data: userData, error: userError } = await supabase  // query user table to get the logged in user's id
+            .from('user')
+            .select('*')
+            .eq('email', storedUser.email)
+            .single();
+
+            if (userError || userData === null) {
+                console.error("Error fetching user: ", userError);
+                return;
+            }
+
+            console.log("Queried user's name: ", userData.name);
+
+            setUsername(userData.name);
+
+            const { data: eventData, error: eventDataError } = await supabase
+                .from('event')
+                .select('name, venue, date, time')
+                .eq('id', state.eventId)
+                .single();  // get the event information from the event table in supabase
+
+            if (eventDataError || eventData === null) {
+                console.error("Error fetching event: ", eventDataError);
+                return;
+            }
+
+            setEventInfo(eventData);
+
+            setTicket(state);
+        };
+
+        getTicketData()
+    }, [location, navigate]);
+
+    if (!ticket || !eventInfo || !username) {
         return (
             <div className="container mt-5">
-                <p>No ticket information available.</p>
+                <p>Loading ticket info...</p>
             </div>
         );
     }
@@ -31,9 +69,12 @@ const ViewTicket = () => {
 
             <div className="ticket-card">
                 <h3>Ticket Details</h3>
-                <p><strong>Name:</strong> {ticket.name}</p>
-                <p><strong>Event Name:</strong> {ticket.eventName}</p>
-                <p><strong>Event Time:</strong> {ticket.eventTime}</p>
+                <p><strong>Name:</strong> {username}</p>
+                <p><strong>Event Name:</strong> {eventInfo.name}</p>
+                <p><strong>Event Time:</strong> {eventInfo.time}</p>
+                <p><strong>Event Date:</strong> {eventInfo.date}</p>
+                <p><strong>Event Venue:</strong> {eventInfo.venue}</p>
+                <p><strong>Payment ID:</strong> {ticket.paymentId}</p>
             </div>
         </div>
     );

@@ -8,7 +8,6 @@ const PaymentConfirmation = () => {
   const paymentDetails = location.state || {};
 
   useEffect(() => {
-    // Save ticket data to localStorage (optional)
     const ticketData = {
       name: "Khujista",
       eventName: paymentDetails.eventName,
@@ -17,10 +16,7 @@ const PaymentConfirmation = () => {
     localStorage.setItem('ticket', JSON.stringify(ticketData));
   }, [paymentDetails]);
 
-
-
   const handleViewTicket = () => {
-
     navigate('/view-tickets', {
       state: {
         paymentId: paymentDetails.paymentId,
@@ -31,7 +27,7 @@ const PaymentConfirmation = () => {
         type: paymentDetails.type
       }
     });
-
+  };
 
   const handleBackToEvents = () => {
     navigate('/');
@@ -60,5 +56,5 @@ const PaymentConfirmation = () => {
     </div>
   );
 };
-}
+
 export default PaymentConfirmation;

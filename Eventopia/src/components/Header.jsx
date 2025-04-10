@@ -5,58 +5,69 @@ import { supabase } from '../Client';
 const Header = () => {
   const [user, setUser] = useState(null);
   const [profileImage, setProfileImage] = useState("https://via.placeholder.com/50");
+  const [userRole, setUserRole] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
       const { data: sessionData, error: sessionError } = await supabase.auth.getUser();
-  
-      // Only proceed if both Supabase session and localStorage are valid
-      const storedUser = JSON.parse(localStorage.getItem("user"));
-      if (sessionError || !sessionData?.user || !storedUser) {
+      if (sessionError || !sessionData?.user) {
         setUser(null);
         return;
       }
-  
+
       const email = sessionData.user.email;
-  
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+
+      if (!storedUser) {
+        navigate("/login");
+        return;
+      }
+
+      // Fetch user profile including role from the user table
       const { data: profileData, error: profileError } = await supabase
         .from("user")
-        .select("profilepic")
+        .select("profilepic, role")
         .eq("email", email)
         .single();
-  
+
+      console.log("Profile Data:", profileData); // Debug log
+      console.log("Profile Error:", profileError); // Debug log
+
       if (profileError) {
         console.error("Profile fetch error:", profileError.message);
       }
-  
+
       if (profileData?.profilepic) {
         setProfileImage(profileData.profilepic);
       }
-  
+      
+      if (profileData?.role) {
+        setUserRole(profileData.role);
+        console.log("User Role Set:", profileData.role); // Debug log
+      }
+
       setUser({ ...storedUser, email });
     };
-  
+
     fetchUserData();
   }, [navigate]);
 
-
   const logoutClick = () => {
     localStorage.removeItem('user');
+    setUserRole(null); // Clear the role on logout
     navigate('/login');
   };
 
-const handleImageUpload = async (event) => {
+  const handleImageUpload = async (event) => {
     const file = event.target.files[0];
     if (!file || !user?.email) return;
   
-    // ✅ UNIQUE FILE NAME TO BUST CACHE
     const timestamp = Date.now();
     const fileExt = file.name.split(".").pop();
     const fileName = `${user.email}-${timestamp}.${fileExt}`;
     const filePath = `profilepictures/${fileName}`;
   
-    // Upload to Supabase Storage
     const { error: uploadError } = await supabase.storage
       .from("profilepictures")
       .upload(filePath, file);
@@ -67,7 +78,6 @@ const handleImageUpload = async (event) => {
       return;
     }
   
-    // Get public URL
     const { data: urlData } = await supabase.storage
       .from("profilepictures")
       .getPublicUrl(filePath);
@@ -75,7 +85,6 @@ const handleImageUpload = async (event) => {
     const imageUrl = urlData.publicUrl;
     setProfileImage(imageUrl);
   
-    // Save to Supabase user table
     const { error: updateError } = await supabase
       .from("user")
       .update({ profilepic: imageUrl })
@@ -99,9 +108,14 @@ const handleImageUpload = async (event) => {
         {user ? (
           <>
             <Link to="/profile" className="header--link">Profile</Link>
+            {userRole === 4 && ( // 4 represents stakeholder role
+              <Link to="/feedback-analytics" className="header--link">Feedback Analytics</Link>
+            )}
+            {userRole === 4 && (
+              <Link to="/registration-analytics" className="header--link">Registration Analytics</Link>
+            )}
             <button onClick={logoutClick} className="btn">Log Out</button>
 
-            {/* Profile Image Upload from Header */}
             <label htmlFor="headerImageUpload">
               <img
                 src={profileImage}
@@ -132,4 +146,4 @@ const handleImageUpload = async (event) => {
   );
 };
 
-export default Header; 
+export default Header;
