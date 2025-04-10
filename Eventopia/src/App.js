@@ -28,7 +28,10 @@ import ViewPoll from './pages/poll/ViewPoll';
 import AllPolls from './pages/poll/AllPolls';
 import FeedbackAnalytics from './pages/FeedbackAnalytics';
 import Analytics from './pages/Analytics';
+<<<<<<< HEAD
 import ViewTicket from './pages/ViewTicket';
+=======
+>>>>>>> 48ae4a4a845d0b96f69b7f0811822e0628f41938
 
 function App() {
   const [user, setUser] = useState(null);
@@ -69,7 +72,10 @@ function App() {
         <Route path="/allPolls" element={<AllPolls />} />
         <Route path="/feedback-analytics" element={<FeedbackAnalytics />} />
         <Route path="/registration-analytics" element={<Analytics />} />
+<<<<<<< HEAD
         <Route path="/view-tickets" element={<ViewTicket />} />
+=======
+>>>>>>> 48ae4a4a845d0b96f69b7f0811822e0628f41938
       </Routes>
       <Footer />
     </Router>
