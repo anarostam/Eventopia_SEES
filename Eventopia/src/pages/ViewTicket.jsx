@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../Css-folder/ViewTicket.css';
 import { supabase } from '../Client';
+import { QRCodeSVG } from 'qrcode.react';
 
 const ViewTicket = () => {
     const [ticket, setTicket] = useState(null);
@@ -63,6 +64,15 @@ const ViewTicket = () => {
         );
     }
 
+    // Create a unique ticket identifier for the QR code
+    const ticketData = JSON.stringify({
+        eventId: ticket.eventId,
+        userId: username,
+        eventName: eventInfo.name,
+        date: eventInfo.date,
+        time: eventInfo.time
+    });
+
     return (
         <div className="container mt-5">
             <h1 className="text-center mb-4">Your Ticket</h1>
@@ -75,6 +85,15 @@ const ViewTicket = () => {
                 <p><strong>Event Date:</strong> {eventInfo.date}</p>
                 <p><strong>Event Venue:</strong> {eventInfo.venue}</p>
                 <p><strong>Payment ID:</strong> {ticket.paymentId}</p>
+                
+                <div className="qr-code-container">
+                    <QRCodeSVG 
+                        value={ticketData}
+                        size={200}
+                        level="H"
+                        includeMargin={true}
+                    />
+                </div>
             </div>
         </div>
     );
